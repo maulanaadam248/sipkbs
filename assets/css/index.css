@@ -1,0 +1,387 @@
+/* ========================================
+   INDEX PAGE STYLES - SIPKBS (Modern Design)
+   ======================================== */
+
+/* Modern Color Palette */
+:root {
+    --primary-blue: #0066cc;
+    --accent-blue: #4a90e2;
+    --light-blue: #e8f2ff;
+    --dark-blue: #003d7a;
+    --bg-white: #ffffff;
+    --text-dark: #1a1a1a;
+    --text-muted: #666666;
+    --border-light: #e0e0e0;
+    --shadow-soft: rgba(0, 0, 0, 0.08);
+    --shadow-medium: rgba(0, 0, 0, 0.12);
+    --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-card: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+/* Hero Section with Background Image */
+.index-container {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    overflow: hidden;
+}
+
+.index-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('../img/tes1.jpg') center/cover;
+    opacity: 0.15;
+    z-index: 0;
+}
+
+.index-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.9) 0%, 
+        rgba(240, 242, 245, 0.8) 100%);
+    z-index: 1;
+}
+
+/* Welcome Card - Modern Design */
+.welcome-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 4rem 3rem;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    max-width: 1200px;
+    width: 90%;
+    position: relative;
+    z-index: 2;
+}
+
+/* Header Section */
+.header-section {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+}
+
+.balai-icon {
+    background: var(--gradient-hero);
+    color: white;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+    font-size: 2.5rem;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    position: relative;
+}
+
+.balai-icon::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: var(--gradient-hero);
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+.app-title {
+    color: var(--text-dark);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: 3rem;
+    letter-spacing: -0.5px;
+}
+
+.app-subtitle {
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
+    font-weight: 400;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+/* Selection Section */
+.selection-section {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.selection-section h3 {
+    color: var(--text-dark);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+}
+
+.selection-section p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Balai Grid - Modern Layout */
+.balai-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+    position: relative;
+}
+
+/* Balai Card - Modern Design */
+.balai-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.balai-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient-hero);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.balai-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+    border-color: var(--primary-blue);
+    color: white;
+}
+
+.balai-card:hover::before {
+    opacity: 1;
+}
+
+.balai-card:hover .balai-card-icon {
+    color: white;
+    transform: scale(1.1);
+}
+
+.balai-card:hover .balai-name {
+    color: white;
+}
+
+.balai-card-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary-blue);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.balai-card-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background: rgba(0, 102, 204, 0.1);
+    border-radius: 50%;
+    z-index: -1;
+    transition: all 0.3s ease;
+}
+
+.balai-card:hover .balai-card-icon::after {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+.balai-name {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+/* Decorative Elements */
+.decorative-shapes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+}
+
+.shape-1 {
+    width: 300px;
+    height: 300px;
+    background: var(--gradient-hero);
+    top: -150px;
+    right: -150px;
+}
+
+.shape-2 {
+    width: 200px;
+    height: 200px;
+    background: var(--gradient-hero);
+    bottom: -100px;
+    left: -100px;
+}
+
+.shape-3 {
+    width: 150px;
+    height: 150px;
+    background: var(--gradient-hero);
+    top: 50%;
+    right: 10%;
+    transform: translateY(-50%);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .welcome-card {
+        padding: 3rem 2rem;
+        margin: 1rem;
+        border-radius: 16px;
+    }
+    
+    .app-title {
+        font-size: 2.5rem;
+    }
+    
+    .app-subtitle {
+        font-size: 1rem;
+    }
+    
+    .balai-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .balai-card {
+        padding: 2rem 1.5rem;
+        min-height: 180px;
+    }
+    
+    .balai-card-icon {
+        font-size: 2.5rem;
+    }
+    
+    .balai-name {
+        font-size: 1.2rem;
+    }
+    
+    .selection-section h3 {
+        font-size: 1.5rem;
+    }
+    
+    .selection-section p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-card {
+        padding: 2rem 1.5rem;
+        margin: 0.5rem;
+    }
+    
+    .app-title {
+        font-size: 2rem;
+    }
+    
+    .balai-icon {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+    }
+    
+    .balai-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .balai-card {
+        padding: 1.5rem;
+        min-height: 160px;
+    }
+}
+
+/* Loading Animation */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid var(--border-light);
+    border-top: 3px solid var(--primary-blue);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

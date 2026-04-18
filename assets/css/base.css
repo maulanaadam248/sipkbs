@@ -1,0 +1,1715 @@
+/* ========================================
+   MODERN BASE STYLES - SIPKBS
+   ======================================== */
+
+/* Global Variables */
+:root {
+    --primary-gradient: linear-gradient(135deg, #8BC34A 0%, #C5E1A5 100%);
+    --secondary-gradient: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+    --success-gradient: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+    --warning-gradient: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+    --dark-gradient: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+    
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(255, 255, 255, 0.18);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    
+    --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    --card-hover-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    
+    --sidebar-bg: linear-gradient(180deg, #4CAF50 0%, #388E3C 100%);
+    --sidebar-hover: rgba(255, 255, 255, 0.1);
+    
+    --primary-color: #4CAF50;
+    --secondary-color: #8BC34A;
+    --success-color: #4CAF50;
+    --danger-color: #f44336;
+    --warning-color: #ff9800;
+    --info-color: #2196F3;
+    --dark-color: #2d3748;
+    --light-color: #f7fafc;
+    --white: #ffffff;
+    --text-primary: #212529;
+    --text-secondary: #495057;
+    --text-muted: #6c757d;
+    --text-white: #ffffff;
+    --border-color: #dee2e6;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
+    --shadow-xl: 0 20px 40px rgba(0,0,0,0.2);
+    --border-radius: 12px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Global Styles */
+body {
+    background: linear-gradient(135deg, #8BC34A 0%, #C5E1A5 100%);
+    background-attachment: fixed;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Glass Morphism */
+.glass {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius);
+}
+
+/* Text Visibility Fixes */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary) !important;
+}
+
+.card-title, .page-title {
+    color: var(--text-primary) !important;
+}
+
+.card-text, .page-subtitle, p {
+    color: var(--text-secondary) !important;
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+/* Table Text Fixes */
+.table th {
+    color: var(--text-primary) !important;
+    background-color: var(--glass-bg) !important;
+}
+
+.table td {
+    color: var(--text-secondary) !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Button Text Fixes */
+.btn {
+    color: var(--text-white) !important;
+    font-weight: 500 !important;
+}
+
+.btn-outline-primary {
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn-outline-primary:hover {
+    color: var(--text-white) !important;
+    background-color: var(--primary-color) !important;
+}
+
+/* RESET BUTTON - SUPER AGGRESSIVE FIX */
+.btn-reset,
+button[type="reset"],
+input[type="reset"],
+[type="reset"],
+.reset-btn,
+.btn[type="reset"],
+input.reset,
+button.reset,
+a.btn-reset,
+a[href*="reset"],
+a[onclick*="reset"],
+.btn.btn-reset,
+.btn.btn[type="reset"],
+.btn input[type="reset"],
+.btn button[type="reset"],
+.form-control[type="reset"],
+.btn-outline-reset,
+.btn-secondary[type="reset"],
+.btn-light[type="reset"],
+.btn-dark[type="reset"],
+.btn-info[type="reset"],
+.btn-warning[type="reset"],
+.btn-danger[type="reset"],
+.btn-success[type="reset"] {
+    background-color: #6c757d !important;
+    background-image: none !important;
+    border: 2px solid #6c757d !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.375rem !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+    box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3) !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    outline: none !important;
+    min-width: 80px !important;
+    white-space: nowrap !important;
+    position: relative !important;
+    z-index: 10 !important;
+    transform: none !important;
+}
+
+/* RESET BUTTON - TABLE CONTEXT SUPER AGGRESSIVE */
+.table .btn-reset,
+.table button[type="reset"],
+.table input[type="reset"],
+.table [type="reset"],
+.table .reset-btn,
+.table .btn[type="reset"],
+.table input.reset,
+.table button.reset,
+.table a.btn-reset,
+.table a[href*="reset"],
+.table a[onclick*="reset"],
+.table .btn.btn-reset,
+.table .btn.btn[type="reset"],
+.table .btn input[type="reset"],
+.table .btn button[type="reset"],
+.table .form-control[type="reset"],
+.table .btn-outline-reset,
+.table .btn-secondary[type="reset"],
+.table .btn-light[type="reset"],
+.table .btn-dark[type="reset"],
+.table .btn-info[type="reset"],
+.table .btn-warning[type="reset"],
+.table .btn-danger[type="reset"],
+.table .btn-success[type="reset"],
+.table-actions .btn-reset,
+.table-actions button[type="reset"],
+.table-actions input[type="reset"],
+.table-actions [type="reset"],
+.table-actions .reset-btn,
+.table-actions .btn[type="reset"],
+.table-actions input.reset,
+.table-actions button.reset,
+.table-actions a.btn-reset,
+.table-actions a[href*="reset"],
+.table-actions a[onclick*="reset"],
+.table-actions .btn.btn-reset,
+.table-actions .btn.btn[type="reset"],
+.table-actions .btn input[type="reset"],
+.table-actions .btn button[type="reset"],
+.table-actions .form-control[type="reset"],
+.table-actions .btn-outline-reset,
+.table-actions .btn-secondary[type="reset"],
+.table-actions .btn-light[type="reset"],
+.table-actions .btn-dark[type="reset"],
+.table-actions .btn-info[type="reset"],
+.table-actions .btn-warning[type="reset"],
+.table-actions .btn-danger[type="reset"],
+.table-actions .btn-success[type="reset"] {
+    background-color: #6c757d !important;
+    background-image: none !important;
+    border: 2px solid #6c757d !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+    padding: 0.375rem 0.75rem !important;
+    border-radius: 0.25rem !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3) !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    outline: none !important;
+    min-width: 60px !important;
+    white-space: nowrap !important;
+    position: relative !important;
+    z-index: 10 !important;
+    transform: none !important;
+}
+
+/* RESET BUTTON - FILTER CONTEXT SUPER AGGRESSIVE */
+.filter-form .btn-reset,
+.filter-form button[type="reset"],
+.filter-form input[type="reset"],
+.form-filter .btn-reset,
+.form-filter button[type="reset"],
+.form-filter input[type="reset"],
+.filter-controls .btn-reset,
+.filter-controls button[type="reset"],
+.filter-controls input[type="reset"],
+.search-form .btn-reset,
+.search-form button[type="reset"],
+.search-form input[type="reset"],
+.card .btn-reset,
+.card button[type="reset"],
+.card input[type="reset"],
+.card-header .btn-reset,
+.card-header button[type="reset"],
+.card-header input[type="reset"],
+.card-body .btn-reset,
+.card-body button[type="reset"],
+.card-body input[type="reset"],
+.btn-filter + .btn-reset,
+.btn-filter + button[type="reset"],
+.btn-filter + input[type="reset"],
+.btn-primary + .btn-reset,
+.btn-primary + button[type="reset"],
+.btn-primary + input[type="reset"],
+.btn-outline-primary + .btn-reset,
+.btn-outline-primary + button[type="reset"],
+.btn-outline-primary + input[type="reset"],
+.form-group .btn-reset,
+.form-group button[type="reset"],
+.form-group input[type="reset"],
+.form-row .btn-reset,
+.form-row button[type="reset"],
+.form-row input[type="reset"],
+.input-group .btn-reset,
+.input-group button[type="reset"],
+.input-group input[type="reset"],
+.input-group-append .btn-reset,
+.input-group-append button[type="reset"],
+.input-group-append input[type="reset"] {
+    background-color: #6c757d !important;
+    background-image: none !important;
+    border: 2px solid #6c757d !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.375rem !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+    box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3) !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    outline: none !important;
+    min-width: 80px !important;
+    white-space: nowrap !important;
+    position: relative !important;
+    z-index: 10 !important;
+    transform: none !important;
+}
+
+/* RESET BUTTON - UNIVERSAL SELECTOR */
+* [type="reset"],
+* .btn-reset,
+* .reset-btn,
+* [class*="reset"],
+* [onclick*="reset"],
+* [href*="reset"] {
+    background-color: #6c757d !important;
+    background-image: none !important;
+    border: 2px solid #6c757d !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.375rem !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+    box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3) !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    outline: none !important;
+    min-width: 80px !important;
+    white-space: nowrap !important;
+    position: relative !important;
+    z-index: 10 !important;
+    transform: none !important;
+}
+
+/* RESET BUTTON HOVER - UNIVERSAL */
+.btn-reset:hover,
+button[type="reset"]:hover,
+input[type="reset"]:hover,
+[type="reset"]:hover,
+.reset-btn:hover,
+.btn[type="reset"]:hover,
+input.reset:hover,
+button.reset:hover,
+a.btn-reset:hover,
+a[href*="reset"]:hover,
+a[onclick*="reset"]:hover,
+.btn.btn-reset:hover,
+.btn.btn[type="reset"]:hover,
+.btn input[type="reset"]:hover,
+.btn button[type="reset"]:hover,
+.form-control[type="reset"]:hover,
+.btn-outline-reset:hover,
+.btn-secondary[type="reset"]:hover,
+.btn-light[type="reset"]:hover,
+.btn-dark[type="reset"]:hover,
+.btn-info[type="reset"]:hover,
+.btn-warning[type="reset"]:hover,
+.btn-danger[type="reset"]:hover,
+.btn-success[type="reset"]:hover,
+* [type="reset"]:hover,
+* .btn-reset:hover,
+* .reset-btn:hover,
+* [class*="reset"]:hover,
+* [onclick*="reset"]:hover,
+* [href*="reset"]:hover {
+    background-color: #5a6268 !important;
+    border-color: #5a6268 !important;
+    color: #ffffff !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    box-shadow: 0 4px 8px rgba(90, 98, 104, 0.4) !important;
+    transform: translateY(-2px) !important;
+    text-decoration: none !important;
+}
+
+/* Specific Reset Button in Tables - RIWAYAT LAPORAN */
+.table .btn-reset,
+.table .btn[type="reset"],
+.table input[type="reset"],
+.table button[type="reset"],
+.table .reset-btn,
+.table-actions .btn-reset,
+.table-actions .btn[type="reset"],
+.table-actions input[type="reset"],
+.table-actions button[type="reset"],
+.table-actions .reset-btn {
+    background-color: #8BC34A !important;
+    border-color: #8BC34A !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+    padding: 0.375rem 0.75rem !important;
+    border-radius: 0.25rem !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    border: 2px solid #8BC34A !important;
+    box-shadow: 0 2px 4px rgba(139, 195, 74, 0.2) !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    outline: none !important;
+    min-width: 60px !important;
+    white-space: nowrap !important;
+}
+
+/* Reset Button Links - FOR RIWAYAT LAPORAN */
+a.btn-reset,
+a.btn[type="reset"],
+a.reset-btn,
+a[href*="reset"],
+a[onclick*="reset"] {
+    background-color: #8BC34A !important;
+    border-color: #8BC34A !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+    padding: 0.375rem 0.75rem !important;
+    border-radius: 0.25rem !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    border: 2px solid #8BC34A !important;
+    box-shadow: 0 2px 4px rgba(139, 195, 74, 0.2) !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    outline: none !important;
+    min-width: 60px !important;
+    white-space: nowrap !important;
+}
+
+/* Table Action Buttons Specific */
+.table-actions .btn,
+.table .btn-action,
+.btn-action {
+    background-color: #8BC34A !important;
+    border-color: #8BC34A !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+    padding: 0.375rem 0.75rem !important;
+    border-radius: 0.25rem !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    border: 2px solid #8BC34A !important;
+    box-shadow: 0 2px 4px rgba(139, 195, 74, 0.2) !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    outline: none !important;
+    min-width: 60px !important;
+    white-space: nowrap !important;
+}
+
+/* Small Button Fixes */
+.btn-sm,
+.btn-small {
+    background-color: #8BC34A !important;
+    border-color: #8BC34A !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+    padding: 0.25rem 0.5rem !important;
+    border-radius: 0.25rem !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    font-size: 0.75rem !important;
+    line-height: 1.3 !important;
+    border: 2px solid #8BC34A !important;
+    box-shadow: 0 2px 4px rgba(139, 195, 74, 0.2) !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    outline: none !important;
+    min-width: 50px !important;
+    white-space: nowrap !important;
+}
+
+.btn-reset:hover,
+.btn[type="reset"]:hover,
+input[type="reset"].btn:hover,
+button[type="reset"].btn:hover,
+input[type="reset"]:hover,
+button[type="reset"]:hover,
+.reset-btn:hover,
+[type="reset"].btn:hover,
+.table .btn-reset:hover,
+.table .btn[type="reset"]:hover,
+.table input[type="reset"]:hover,
+.table button[type="reset"]:hover,
+.table .reset-btn:hover,
+.table-actions .btn-reset:hover,
+.table-actions .btn[type="reset"]:hover,
+.table-actions input[type="reset"]:hover,
+.table-actions button[type="reset"]:hover,
+.table-actions .reset-btn:hover,
+a.btn-reset:hover,
+a.btn[type="reset"]:hover,
+a.reset-btn:hover,
+a[href*="reset"]:hover,
+a[onclick*="reset"]:hover,
+.table-actions .btn:hover,
+.table .btn-action:hover,
+.btn-action:hover,
+.btn-sm:hover,
+.btn-small:hover {
+    background-color: #4CAF50 !important;
+    border-color: #4CAF50 !important;
+    color: #ffffff !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3) !important;
+    transform: translateY(-1px) !important;
+    text-decoration: none !important;
+}
+
+.btn-reset:focus,
+.btn[type="reset"]:focus,
+input[type="reset"].btn:focus,
+button[type="reset"].btn:focus,
+input[type="reset"]:focus,
+button[type="reset"]:focus,
+.reset-btn:focus,
+[type="reset"].btn:focus,
+.table .btn-reset:focus,
+.table .btn[type="reset"]:focus,
+.table input[type="reset"]:focus,
+.table button[type="reset"]:focus,
+.table .reset-btn:focus,
+.table-actions .btn-reset:focus,
+.table-actions .btn[type="reset"]:focus,
+.table-actions input[type="reset"]:focus,
+.table-actions button[type="reset"]:focus,
+.table-actions .reset-btn:focus,
+a.btn-reset:focus,
+a.btn[type="reset"]:focus,
+a.reset-btn:focus,
+a[href*="reset"]:focus,
+a[onclick*="reset"]:focus,
+.table-actions .btn:focus,
+.table .btn-action:focus,
+.btn-action:focus,
+.btn-sm:focus,
+.btn-small:focus {
+    background-color: #4CAF50 !important;
+    border-color: #4CAF50 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 3px rgba(139, 195, 74, 0.25) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    outline: none !important;
+    text-decoration: none !important;
+}
+
+.btn-reset:active,
+.btn[type="reset"]:active,
+input[type="reset"].btn:active,
+button[type="reset"].btn:active,
+input[type="reset"]:active,
+button[type="reset"]:active,
+.reset-btn:active,
+[type="reset"].btn:active,
+.table .btn-reset:active,
+.table .btn[type="reset"]:active,
+.table input[type="reset"]:active,
+.table button[type="reset"]:active,
+.table .reset-btn:active,
+.table-actions .btn-reset:active,
+.table-actions .btn[type="reset"]:active,
+.table-actions input[type="reset"]:active,
+.table-actions button[type="reset"]:active,
+.table-actions .reset-btn:active,
+a.btn-reset:active,
+a.btn[type="reset"]:active,
+a.reset-btn:active,
+a[href*="reset"]:active,
+a[onclick*="reset"]:active,
+.table-actions .btn:active,
+.table .btn-action:active,
+.btn-action:active,
+.btn-sm:active,
+.btn-small:active {
+    background-color: #388E3C !important;
+    border-color: #388E3C !important;
+    color: #ffffff !important;
+    transform: translateY(0) !important;
+    text-decoration: none !important;
+}
+
+/* Reset Button Icon Fixes */
+.btn-reset i,
+.btn-reset .fas,
+.btn-reset .fa,
+.btn-reset .fab,
+.btn-reset .far,
+.btn[type="reset"] i,
+.btn[type="reset"] .fas,
+.btn[type="reset"] .fa,
+.btn[type="reset"] .fab,
+.btn[type="reset"] .far,
+input[type="reset"] i,
+input[type="reset"] .fas,
+input[type="reset"] .fa,
+input[type="reset"] .fab,
+input[type="reset"] .far,
+button[type="reset"] i,
+button[type="reset"] .fas,
+button[type="reset"] .fa,
+button[type="reset"] .fab,
+button[type="reset"] .far,
+.reset-btn i,
+.reset-btn .fas,
+.reset-btn .fa,
+.reset-btn .fab,
+.reset-btn .far {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+    font-size: 0.875rem !important;
+    margin-right: 0.5rem !important;
+}
+
+/* Filter Form Reset Buttons - RIWAYAT LAPORAN */
+.filter-form .btn-reset,
+.filter-form .btn[type="reset"],
+.filter-form input[type="reset"],
+.filter-form button[type="reset"],
+.form-filter .btn-reset,
+.form-filter .btn[type="reset"],
+.form-filter input[type="reset"],
+.form-filter button[type="reset"],
+.filter-controls .btn-reset,
+.filter-controls .btn[type="reset"],
+.filter-controls input[type="reset"],
+.filter-controls button[type="reset"],
+.search-form .btn-reset,
+.search-form .btn[type="reset"],
+.search-form input[type="reset"],
+.search-form button[type="reset"],
+.card .btn-reset,
+.card .btn[type="reset"],
+.card input[type="reset"],
+.card button[type="reset"],
+.card-header .btn-reset,
+.card-header .btn[type="reset"],
+.card-header input[type="reset"],
+.card-header button[type="reset"],
+.card-body .btn-reset,
+.card-body .btn[type="reset"],
+.card-body input[type="reset"],
+.card-body button[type="reset"] {
+    background-color: #8BC34A !important;
+    border-color: #8BC34A !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.375rem !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+    border: 2px solid #8BC34A !important;
+    box-shadow: 0 2px 4px rgba(139, 195, 74, 0.2) !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    outline: none !important;
+    min-width: 80px !important;
+    white-space: nowrap !important;
+}
+
+/* Next to Filter Button Specific */
+.btn-filter + .btn-reset,
+.btn-filter ~ .btn-reset,
+.btn-primary + .btn-reset,
+.btn-primary ~ .btn-reset,
+.btn-outline-primary + .btn-reset,
+.btn-outline-primary ~ .btn-reset,
+.btn-success + .btn-reset,
+.btn-success ~ .btn-reset,
+input[name="filter"] + .btn-reset,
+input[name="filter"] ~ .btn-reset,
+button[name="filter"] + .btn-reset,
+button[name="filter"] ~ .btn-reset,
+.form-group:has(.btn-filter) .btn-reset,
+.form-group:has(input[name="filter"]) .btn-reset,
+.form-group:has(button[name="filter"]) .btn-reset {
+    background-color: #8BC34A !important;
+    border-color: #8BC34A !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.375rem !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+    border: 2px solid #8BC34A !important;
+    box-shadow: 0 2px 4px rgba(139, 195, 74, 0.2) !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    outline: none !important;
+    min-width: 80px !important;
+    white-space: nowrap !important;
+}
+
+/* Form Row Reset Buttons - FILTER CONTEXT */
+.form-row:has(.btn-filter) .btn-reset,
+.form-row:has(input[name="filter"]) .btn-reset,
+.form-row:has(button[name="filter"]) .btn-reset,
+.form-group:has(.btn-filter) .btn-reset,
+.form-group:has(input[name="filter"]) .btn-reset,
+.form-group:has(button[name="filter"]) .btn-reset {
+    background-color: #8BC34A !important;
+    border-color: #8BC34A !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.375rem !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+    border: 2px solid #8BC34A !important;
+    box-shadow: 0 2px 4px rgba(139, 195, 74, 0.2) !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    outline: none !important;
+    min-width: 80px !important;
+    white-space: nowrap !important;
+}
+
+/* Input Group Reset Button - FILTER CONTEXT */
+.input-group:has(.btn-filter) .btn-reset,
+.input-group:has(input[name="filter"]) .btn-reset,
+.input-group:has(button[name="filter"]) .btn-reset,
+.input-group-append .btn-reset,
+.input-group .btn-reset {
+    background-color: #8BC34A !important;
+    border-color: #8BC34A !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.375rem !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+    border: 2px solid #8BC34A !important;
+    box-shadow: 0 2px 4px rgba(139, 195, 74, 0.2) !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    outline: none !important;
+    min-width: 80px !important;
+    white-space: nowrap !important;
+}
+
+/* Hover States for Filter Reset Buttons */
+.filter-form .btn-reset:hover,
+.filter-form .btn[type="reset"]:hover,
+.filter-form input[type="reset"]:hover,
+.filter-form button[type="reset"]:hover,
+.form-filter .btn-reset:hover,
+.form-filter .btn[type="reset"]:hover,
+.form-filter input[type="reset"]:hover,
+.form-filter button[type="reset"]:hover,
+.filter-controls .btn-reset:hover,
+.filter-controls .btn[type="reset"]:hover,
+.filter-controls input[type="reset"]:hover,
+.filter-controls button[type="reset"]:hover,
+.search-form .btn-reset:hover,
+.search-form .btn[type="reset"]:hover,
+.search-form input[type="reset"]:hover,
+.search-form button[type="reset"]:hover,
+.card .btn-reset:hover,
+.card .btn[type="reset"]:hover,
+.card input[type="reset"]:hover,
+.card button[type="reset"]:hover,
+.btn-filter + .btn-reset:hover,
+.btn-filter ~ .btn-reset:hover,
+.btn-primary + .btn-reset:hover,
+.btn-primary ~ .btn-reset:hover,
+.btn-outline-primary + .btn-reset:hover,
+.btn-outline-primary ~ .btn-reset:hover,
+.form-row:has(.btn-filter) .btn-reset:hover,
+.form-group:has(.btn-filter) .btn-reset:hover,
+.input-group:has(.btn-filter) .btn-reset:hover,
+.input-group-append .btn-reset:hover,
+.input-group .btn-reset:hover {
+    background-color: #4CAF50 !important;
+    border-color: #4CAF50 !important;
+    color: #ffffff !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3) !important;
+    transform: translateY(-1px) !important;
+    text-decoration: none !important;
+}
+
+/* Focus States for Filter Reset Buttons */
+.filter-form .btn-reset:focus,
+.filter-form .btn[type="reset"]:focus,
+.filter-form input[type="reset"]:focus,
+.filter-form button[type="reset"]:focus,
+.form-filter .btn-reset:focus,
+.form-filter .btn[type="reset"]:focus,
+.form-filter input[type="reset"]:focus,
+.form-filter button[type="reset"]:focus,
+.filter-controls .btn-reset:focus,
+.filter-controls .btn[type="reset"]:focus,
+.filter-controls input[type="reset"]:focus,
+.filter-controls button[type="reset"]:focus,
+.search-form .btn-reset:focus,
+.search-form .btn[type="reset"]:focus,
+.search-form input[type="reset"]:focus,
+.search-form button[type="reset"]:focus,
+.card .btn-reset:focus,
+.card .btn[type="reset"]:focus,
+.card input[type="reset"]:focus,
+.card button[type="reset"]:focus,
+.btn-filter + .btn-reset:focus,
+.btn-filter ~ .btn-reset:focus,
+.btn-primary + .btn-reset:focus,
+.btn-primary ~ .btn-reset:focus,
+.btn-outline-primary + .btn-reset:focus,
+.btn-outline-primary ~ .btn-reset:focus,
+.form-row:has(.btn-filter) .btn-reset:focus,
+.form-group:has(.btn-filter) .btn-reset:focus,
+.input-group:has(.btn-filter) .btn-reset:focus,
+.input-group-append .btn-reset:focus,
+.input-group .btn-reset:focus {
+    background-color: #4CAF50 !important;
+    border-color: #4CAF50 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 3px rgba(139, 195, 74, 0.25) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    outline: none !important;
+    text-decoration: none !important;
+}
+
+/* Form Row Reset Buttons - FORCE VISIBLE */
+.form-row .btn-reset,
+.form-row .btn[type="reset"],
+.form-row input[type="reset"],
+.form-row button[type="reset"],
+.form-row .reset-btn,
+.form-group .btn-reset,
+.form-group .btn[type="reset"],
+.form-group input[type="reset"],
+.form-group button[type="reset"],
+.form-group .reset-btn {
+    background-color: #8BC34A !important;
+    border-color: #8BC34A !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.375rem !important;
+    border: 2px solid #8BC34A !important;
+    box-shadow: 0 2px 4px rgba(139, 195, 74, 0.2) !important;
+}
+
+/* Input Group Reset Buttons - FORCE VISIBLE */
+.input-group .btn-reset,
+.input-group .btn[type="reset"],
+.input-group input[type="reset"],
+.input-group button[type="reset"],
+.input-group .reset-btn {
+    background-color: #8BC34A !important;
+    border-color: #8BC34A !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.375rem !important;
+    border: 2px solid #8BC34A !important;
+    box-shadow: 0 2px 4px rgba(139, 195, 74, 0.2) !important;
+}
+
+/* Card Footer Reset Buttons */
+.card-footer .btn-reset,
+.card-footer .btn[type="reset"],
+.card-footer input[type="reset"],
+.card-footer button[type="reset"],
+.card-footer .reset-btn {
+    background-color: #8BC34A !important;
+    border-color: #8BC34A !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+}
+
+/* Modal Footer Reset Buttons */
+.modal-footer .btn-reset,
+.modal-footer .btn[type="reset"],
+.modal-footer input[type="reset"],
+.modal-footer button[type="reset"],
+.modal-footer .reset-btn {
+    background-color: #8BC34A !important;
+    border-color: #8BC34A !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+}
+
+/* Comprehensive Button Fixes */
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: var(--text-white) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color) !important;
+    border-color: var(--secondary-color) !important;
+    color: var(--text-white) !important;
+}
+
+.btn-success {
+    background-color: var(--success-color) !important;
+    border-color: var(--success-color) !important;
+    color: var(--text-white) !important;
+}
+
+.btn-danger {
+    background-color: var(--danger-color) !important;
+    border-color: var(--danger-color) !important;
+    color: var(--text-white) !important;
+}
+
+.btn-warning {
+    background-color: var(--warning-color) !important;
+    border-color: var(--warning-color) !important;
+    color: var(--text-white) !important;
+}
+
+.btn-info {
+    background-color: var(--info-color) !important;
+    border-color: var(--info-color) !important;
+    color: var(--text-white) !important;
+}
+
+.btn-secondary {
+    background-color: var(--text-secondary) !important;
+    border-color: var(--text-secondary) !important;
+    color: var(--text-white) !important;
+}
+
+.btn-light {
+    background-color: var(--light-color) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+.btn-dark {
+    background-color: var(--dark-color) !important;
+    border-color: var(--dark-color) !important;
+    color: var(--text-white) !important;
+}
+
+/* Icon Visibility Fixes */
+.btn i,
+.btn .fas,
+.btn .fa,
+.btn .fab,
+.btn .far {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+}
+
+.btn-primary i,
+.btn-primary .fas,
+.btn-primary .fa,
+.btn-primary .fab,
+.btn-primary .far {
+    color: var(--text-white) !important;
+}
+
+.btn-success i,
+.btn-success .fas,
+.btn-success .fa,
+.btn-success .fab,
+.btn-success .far {
+    color: var(--text-white) !important;
+}
+
+.btn-danger i,
+.btn-danger .fas,
+.btn-danger .fa,
+.btn-danger .fab,
+.btn-danger .far {
+    color: var(--text-white) !important;
+}
+
+.btn-warning i,
+.btn-warning .fas,
+.btn-warning .fa,
+.btn-warning .fab,
+.btn-warning .far {
+    color: var(--text-white) !important;
+}
+
+.btn-info i,
+.btn-info .fas,
+.btn-info .fa,
+.btn-info .fab,
+.btn-info .far {
+    color: var(--text-white) !important;
+}
+
+.btn-secondary i,
+.btn-secondary .fas,
+.btn-secondary .fa,
+.btn-secondary .fab,
+.btn-secondary .far {
+    color: var(--text-white) !important;
+}
+
+.btn-light i,
+.btn-light .fas,
+.btn-light .fa,
+.btn-light .fab,
+.btn-light .far {
+    color: var(--text-primary) !important;
+}
+
+.btn-dark i,
+.btn-dark .fas,
+.btn-dark .fa,
+.btn-dark .fab,
+.btn-dark .far {
+    color: var(--text-white) !important;
+}
+
+.btn-outline-primary i,
+.btn-outline-primary .fas,
+.btn-outline-primary .fa,
+.btn-outline-primary .fab,
+.btn-outline-primary .far {
+    color: var(--primary-color) !important;
+}
+
+.btn-outline-primary:hover i,
+.btn-outline-primary:hover .fas,
+.btn-outline-primary:hover .fa,
+.btn-outline-primary:hover .fab,
+.btn-outline-primary:hover .far {
+    color: var(--text-white) !important;
+}
+
+/* General Icon Fixes */
+i,
+.fas,
+.fa,
+.fab,
+.far {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Icon in Cards */
+.card i,
+.card .fas,
+.card .fa,
+.card .fab,
+.card .far {
+    color: var(--primary-color) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Icon in Tables */
+.table i,
+.table .fas,
+.table .fa,
+.table .fab,
+.table .far {
+    color: var(--primary-color) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Icon in Headers */
+h1 i,
+h1 .fas,
+h1 .fa,
+h1 .fab,
+h1 .far,
+h2 i,
+h2 .fas,
+h2 .fa,
+h2 .fab,
+h2 .far,
+h3 i,
+h3 .fas,
+h3 .fa,
+h3 .fab,
+h3 .far,
+h4 i,
+h4 .fas,
+h4 .fa,
+h4 .fab,
+h4 .far,
+h5 i,
+h5 .fas,
+h5 .fa,
+h5 .fab,
+h5 .far,
+h6 i,
+h6 .fas,
+h6 .fa,
+h6 .fab,
+h6 .far {
+    color: var(--primary-color) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Form Text Fixes */
+.form-control {
+    color: var(--text-primary) !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.form-label {
+    color: var(--text-primary) !important;
+}
+
+/* Alert Text Fixes */
+.alert {
+    color: var(--text-primary) !important;
+}
+
+/* Sidebar Text Fixes */
+.sidebar .nav-link {
+    color: var(--text-white) !important;
+}
+
+/* Navbar & User Info Text Fixes */
+.user-avatar {
+    color: var(--text-primary) !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 2px solid var(--primary-color) !important;
+}
+
+.user-name {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+}
+
+.user-role {
+    color: var(--text-secondary) !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+}
+
+/* Additional Text Visibility Fixes */
+.dropdown-item {
+    color: var(--text-primary) !important;
+}
+
+.dropdown-item:hover {
+    background-color: var(--primary-color) !important;
+    color: var(--text-white) !important;
+}
+
+/* Badge and Status Text */
+.badge {
+    color: var(--text-white) !important;
+}
+
+/* Link Text */
+a {
+    color: var(--primary-color) !important;
+}
+
+a:hover {
+    color: var(--secondary-color) !important;
+}
+
+/* List Group Items */
+.list-group-item {
+    color: var(--text-primary) !important;
+}
+
+/* Modal Headers */
+.modal-title {
+    color: var(--text-primary) !important;
+}
+
+/* Card Headers */
+.card-header {
+    color: var(--text-primary) !important;
+}
+
+/* Breadcrumb */
+.breadcrumb-item {
+    color: var(--text-secondary) !important;
+}
+
+.breadcrumb-item.active {
+    color: var(--text-primary) !important;
+}
+
+/* Pagination */
+.page-link {
+    color: var(--primary-color) !important;
+}
+
+.page-link:hover {
+    color: var(--secondary-color) !important;
+    background-color: rgba(76, 175, 80, 0.1) !important;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+h1 {
+    font-size: 2.5rem;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+    color: var(--text-primary);
+    position: relative;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--primary-gradient);
+    border-radius: 2px;
+}
+
+p {
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+/* Modern Button Styles */
+.btn {
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.875rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-secondary {
+    background: var(--secondary-gradient);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-success {
+    background: var(--success-gradient);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-danger {
+    background: var(--danger-color);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    background: transparent;
+    position: relative;
+}
+
+.btn-outline-primary::before {
+    background: var(--primary-gradient);
+    z-index: -1;
+}
+
+.btn-outline-primary:hover {
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Modern Form Styles */
+.form-control, .form-select {
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 0.875rem 1rem;
+    transition: var(--transition);
+    font-size: 0.95rem;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-sm);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    outline: none;
+    transform: translateY(-1px);
+    background: white;
+}
+
+.form-label {
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-label::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+}
+
+.form-control::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
+    font-style: italic;
+}
+
+/* Modern Alert Styles */
+.alert {
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-md);
+    border-left: 4px solid;
+    position: relative;
+    overflow: hidden;
+}
+
+.alert::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: inherit;
+    opacity: 0.3;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(0, 242, 254, 0.1) 100%);
+    color: var(--success-color);
+    border-left-color: var(--success-color);
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, rgba(245, 101, 101, 0.1) 0%, rgba(240, 147, 251, 0.1) 100%);
+    color: var(--danger-color);
+    border-left-color: var(--danger-color);
+}
+
+.alert-info {
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(0, 242, 254, 0.1) 100%);
+    color: var(--info-color);
+    border-left-color: var(--info-color);
+}
+
+/* Modern Badge Styles */
+.badge {
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Modern Card Styles */
+.card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-gradient);
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+/* Utility Classes */
+.text-gradient {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.bg-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Focus Styles */
+.btn:focus,
+.form-control:focus,
+.form-select:focus,
+.nav-link:focus {
+    outline: 3px solid rgba(102, 126, 234, 0.3);
+    outline-offset: 2px;
+}
+
+/* Loading State */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Modern Navbar Styles */
+.navbar {
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-lg);
+    padding: 1rem 0;
+    z-index: 1000;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: 700;
+    color: white !important;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.brand-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-gradient);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: var(--shadow-md);
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.brand-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.brand-subtitle {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    font-weight: 400;
+}
+
+.navbar-brand:hover .brand-icon {
+    transform: rotate(15deg) scale(1.1);
+}
+
+.navbar-brand:hover {
+    transform: translateX(5px);
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: var(--secondary-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: white;
+}
+
+.user-role {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.nav-link:hover {
+    color: white !important;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-menu {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-xl);
+    margin-top: 0.5rem;
+}
+
+.dropdown-item {
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    transition: var(--transition);
+    border-radius: 8px;
+    margin: 0.25rem 0.5rem;
+}
+
+.dropdown-item:hover {
+    background: var(--primary-gradient);
+    color: white;
+    transform: translateX(5px);
+}
+
+/* Print Styles */
+@media print {
+    .sidebar,
+    .navbar,
+    .btn-action,
+    footer {
+        display: none !important;
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+        padding: 1rem !important;
+    }
+    
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #000 !important;
+    }
+}

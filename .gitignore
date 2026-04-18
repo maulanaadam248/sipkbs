@@ -1,0 +1,6 @@
+# Jangan upload konfigurasi database rahasia (opsional, jika password masih root/kosong di lokal, bisa diabaikan dulu)
+# config/database.php
+
+# File sampah sistem operasi
+.DS_Store
+Thumbs.db

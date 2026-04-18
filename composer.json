@@ -1,0 +1,11 @@
+{
+    "require": {
+        "dompdf/dompdf": "^2.0",
+        "phpoffice/phpword": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "vendor/"
+        }
+    }
+}

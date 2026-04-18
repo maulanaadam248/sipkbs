@@ -1,0 +1,27 @@
+# SIPKBS .htaccess Configuration
+RewriteEngine On
+
+# Security headers
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options DENY
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Hide .htaccess file
+<Files .htaccess>
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Prevent directory listing
+Options -Indexes
+
+# Error handling
+ErrorDocument 404 /error-404.php
+ErrorDocument 403 /error-403.php
+ErrorDocument 500 /error-500.php
+
+# URL rewrite for clean URLs (optional)
+# RewriteRule ^admin/([^/]+)/?$ admin/$1.php [L,QSA]
+# RewriteRule ^laporan/([^/]+)/?$ laporan/$1.php [L,QSA]
