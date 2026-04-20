@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo isset($page_title) ? $page_title : 'SIPKBS'; ?> - Sistem Informasi Pelaporan Ketersediaan Benih Sumber</title>
+    <title><?php echo isset($page_title) ? $page_title : 'SIKBS'; ?> - Sistem Informasi Ketersediaan Benih Sumber</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -219,7 +219,7 @@
         </button>
         
         <a class="text-decoration-none fw-bolder fs-4 text-success ms-2 border-start ps-3 border-2" href="#home">
-            <i class="fas fa-seedling me-1"></i> SIPKBS
+            <i class="fas fa-seedling me-1"></i> SIKBS
         </a>
     </div>
 

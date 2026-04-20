@@ -63,22 +63,47 @@ require_once '../templates/sidebar.php';
         justify-content: center;
     }
 
-    /* CSS Animasi Tabel yang Elegan & Profesional (Tidak Alay) */
-    .table-interactive {
-        border-collapse: separate;
-        border-spacing: 0;
+    /* TEMA TABEL HIJAU MUDA ADEM UNTUK DASHBOARD */
+    .table-green-theme {
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        border: 1px solid #d1fae5 !important;
+        width: 100% !important;
+        background-color: #ffffff !important;
     }
-    .table-interactive tbody tr {
-        transition: background-color 0.2s ease;
-        /* Membuat space untuk garis hijau di sebelah kiri saat hover */
-        border-left: 4px solid transparent; 
+    
+    .table-green-theme thead th {
+        background-color: #d1fae5 !important;
+        color: #065f46 !important;
+        border-bottom: 2px solid #a7f3d0 !important;
+        border-top: none !important;
+        padding: 14px 15px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.3px !important;
+        vertical-align: middle !important;
     }
-    .table-interactive tbody tr:hover {
-        background-color: #f8fafc !important; /* Latar abu-abu sangat halus */
-        border-left: 4px solid #16a34a; /* Garis tepi hijau elegan di kiri */
+
+    .table-green-theme tbody tr {
+        background-color: #ffffff !important;
+        transition: all 0.2s ease !important;
     }
-    .table-interactive tbody td {
-        vertical-align: middle;
+
+    .table-green-theme tbody tr:nth-of-type(even) {
+        background-color: #f6fdf9 !important;
+    }
+
+    .table-green-theme tbody tr:hover {
+        background-color: #ecfdf5 !important;
+    }
+
+    .table-green-theme tbody td {
+        border-bottom: 1px solid #e2e8f0 !important;
+        border-top: none !important;
+        padding: 12px 15px !important;
+        color: #334155 !important;
+        vertical-align: middle !important;
     }
 </style>
 
@@ -184,23 +209,23 @@ require_once '../templates/sidebar.php';
                         
                         <div class="p-4 p-lg-5 d-flex flex-column h-100">
                             
-                            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
                                 <h5 class="fw-bold text-success mb-0">
                                     <i class="fas fa-clock me-2"></i>Laporan Terakhir
                                 </h5>
                             </div>
                             
-                            <div class="table-responsive flex-grow-1">
-                                <table class="table table-interactive align-middle mb-0" style="font-size: 0.95rem;">
-                                    <thead style="border-bottom: 2px solid #e2e8f0;">
+                            <div class="table-responsive px-2 flex-grow-1">
+                                <table class="table-green-theme align-middle mb-0" style="font-size: 0.95rem;">
+                                    <thead>
                                         <tr>
-                                            <th class="fw-semibold pb-3 border-0 text-uppercase text-secondary" style="letter-spacing: 0.5px; font-size: 0.75rem;">Komoditas & Varietas</th>
-                                            <th class="fw-semibold pb-3 border-0 text-uppercase text-secondary" style="letter-spacing: 0.5px; font-size: 0.75rem;">Kelas Benih</th>
-                                            <th class="fw-semibold pb-3 border-0 text-uppercase text-secondary" style="letter-spacing: 0.5px; font-size: 0.75rem;">Jumlah Stok</th>
-                                            <th class="fw-semibold pb-3 border-0 text-uppercase text-secondary" style="letter-spacing: 0.5px; font-size: 0.75rem;">Status</th>
+                                            <th>Komoditas & Varietas</th>
+                                            <th>Kelas Benih</th>
+                                            <th>Jumlah Stok</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
-                                    <tbody style="border-top: none;">
+                                    <tbody>
                                         <?php
                                         // PENTING: Tambahkan 'kelas_benih' ke dalam query SQL
                                         $query_terbaru = "SELECT komoditas, varietas, kelompok_komoditas, kelas_benih, jumlah_benih, satuan, status_ketersediaan 
@@ -212,20 +237,15 @@ require_once '../templates/sidebar.php';
                                         
                                         if (mysqli_num_rows($result_terbaru) > 0):
                                             while ($row_baru = mysqli_fetch_assoc($result_terbaru)):
-                                                $status = $row_baru['status_ketersediaan'];
-                                                $badge_color = 'bg-secondary';
-                                                if($status == 'Tersedia') $badge_color = 'bg-success';
-                                                elseif($status == 'Tidak Tersedia') $badge_color = 'bg-danger';
-                                                elseif($status == 'Terbatas') $badge_color = 'bg-warning text-dark';
                                         ?>
-                                        <tr style="border-bottom: 1px solid #f1f5f9;">
-                                            <td class="py-3 px-3 border-0">
+                                        <tr>
+                                            <td>
                                                 <div class="d-flex align-items-center">
-                                                    <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3 text-success" style="width: 38px; height: 38px;">
+                                                    <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3 text-success shadow-sm" style="width: 38px; height: 38px; min-width: 38px;">
                                                         <i class="fas fa-seedling"></i>
                                                     </div>
                                                     <div>
-                                                        <div class="fw-bold text-dark" style="font-size: 0.95rem;"><?= htmlspecialchars($row_baru['komoditas']); ?></div>
+                                                        <div class="fw-bold text-success" style="font-size: 0.95rem;"><?= htmlspecialchars($row_baru['komoditas']); ?></div>
                                                         <div class="text-muted" style="font-size: 0.8rem;">
                                                             <?= htmlspecialchars($row_baru['varietas'] ?: 'Tanpa Varietas'); ?> 
                                                             <?= !empty($row_baru['kelompok_komoditas']) ? '• ' . htmlspecialchars($row_baru['kelompok_komoditas']) : ''; ?>
@@ -234,19 +254,25 @@ require_once '../templates/sidebar.php';
                                                 </div>
                                             </td>
                                             
-                                            <td class="py-3 px-2 border-0">
-                                                <span class="badge bg-light text-secondary border px-2 py-1 fw-medium rounded-2">
-                                                    <?= htmlspecialchars($row_baru['kelas_benih'] ?: '-'); ?>
-                                                </span>
+                                            <td>
+                                                <?= htmlspecialchars($row_baru['kelas_benih'] ?: '-'); ?>
                                             </td>
 
-                                            <td class="py-3 px-2 border-0">
-                                                <span class="fw-bold text-dark fs-5"><?= number_format($row_baru['jumlah_benih']); ?></span> 
+                                            <td>
+                                                <span class="fw-bold text-dark fs-6"><?= number_format($row_baru['jumlah_benih']); ?></span> 
                                                 <span class="text-secondary fw-medium small"><?= htmlspecialchars($row_baru['satuan']); ?></span>
                                             </td>
                                             
-                                            <td class="py-3 px-2 border-0">
-                                                <span class="badge <?= $badge_color; ?> px-3 py-2 rounded-2" style="font-weight: 500; letter-spacing: 0.3px;">
+                                            <td>
+                                                <?php
+                                                $status = $row_baru['status_ketersediaan'];
+                                                $outline_class = 'border-secondary text-secondary'; 
+                                                if($status == 'Tersedia') $outline_class = 'border-success text-success'; 
+                                                elseif($status == 'Tidak Tersedia') $outline_class = 'border-danger text-danger'; 
+                                                elseif($status == 'Terbatas') $outline_class = 'border-warning text-warning-emphasis'; 
+                                                elseif($status == 'PO') $outline_class = 'border-primary text-primary'; 
+                                                ?>
+                                                <span class="badge bg-transparent border <?= $outline_class; ?> px-3 py-2 rounded-2 fw-bold" style="letter-spacing: 0.5px;">
                                                     <?= htmlspecialchars($status); ?>
                                                 </span>
                                             </td>
@@ -269,7 +295,7 @@ require_once '../templates/sidebar.php';
                                 </table>
                             </div>
                         </div>
-                        </div>
+                    </div>
                 </div>
             </div>
 

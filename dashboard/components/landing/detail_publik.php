@@ -1,6 +1,45 @@
 <?php
 session_start();
 require_once '../../../config/database.php';
+
+// Fungsi untuk menentukan Ikon dan Warna berdasarkan Komoditas
+if (!function_exists('getKomoditasIcon')) {
+    function getKomoditasIcon($nama_komoditas) {
+        $k = strtolower(trim($nama_komoditas));
+        
+        // Default (Jika tidak terdaftar, pakai Tunas Daun Hijau standar)
+        $icon = 'fa-seedling';
+        $color = '#16a34a'; // Hijau teks
+        $bg = 'rgba(22, 163, 74, 0.1)'; // Hijau background transparan
+
+        if (strpos($k, 'kakao') !== false) {
+            $icon = 'fa-leaf'; $color = '#78350f'; $bg = 'rgba(120, 53, 15, 0.1)'; // Coklat Kakao
+        } elseif (strpos($k, 'kopi') !== false) {
+            $icon = 'fa-egg'; $color = '#451a03'; $bg = 'rgba(69, 26, 3, 0.1)'; // Biji Kopi Utuh (Oval)
+        } elseif (strpos($k, 'kelapa') !== false) {
+            $icon = 'fa-seedling'; $color = '#047857'; $bg = 'rgba(4, 120, 87, 0.1)'; // Hijau Tunas Kelapa
+        } elseif (strpos($k, 'tembakau') !== false) {
+            $icon = 'fa-leaf'; $color = '#65a30d'; $bg = 'rgba(101, 163, 13, 0.1)'; // Hijau Kekuningan Tembakau
+        } elseif (strpos($k, 'kapas') !== false) {
+            $icon = 'fa-spa'; $color = '#0ea5e9'; $bg = 'rgba(14, 165, 233, 0.1)'; // Bunga Mekar Kapas (Biru Langit Lembut)
+        } elseif (strpos($k, 'lada') !== false) {
+            $icon = 'fa-leaf'; $color = '#064e3b'; $bg = 'rgba(6, 78, 59, 0.1)'; // Hijau Gelap Daun Lada
+        } elseif (strpos($k, 'vanili') !== false) {
+            $icon = 'fa-leaf'; $color = '#0d9488'; $bg = 'rgba(13, 148, 136, 0.1)'; // Hijau Teal Eksotis
+        } elseif (strpos($k, 'nilam') !== false) {
+            $icon = 'fa-leaf'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)'; // Hijau Daun Pekat
+        } elseif (strpos($k, 'wijen') !== false) {
+            $icon = 'fa-seedling'; $color = '#d97706'; $bg = 'rgba(217, 119, 6, 0.1)'; // Oranye Kecoklatan Wijen
+        } elseif (strpos($k, 'rosella') !== false) {
+            $icon = 'fa-spa'; $color = '#be123c'; $bg = 'rgba(190, 18, 60, 0.1)'; // Bunga Merah/Pink Rosella
+        } elseif (strpos($k, 'jarak') !== false) {
+            $icon = 'fa-seedling'; $color = '#4d7c0f'; $bg = 'rgba(77, 124, 15, 0.1)'; // Hijau Zaitun
+        }
+
+        return ['icon' => $icon, 'color' => $color, 'bg' => $bg];
+    }
+}
+
 if(!isset($_GET['id'])) {
     header("Location: index.php");
     exit();
@@ -22,6 +61,9 @@ if(mysqli_num_rows($result) == 0) {
 }
 
 $laporan = mysqli_fetch_assoc($result);
+
+// Panggil fungsi untuk mendapatkan styling icon & warnanya
+$styleTanaman = getKomoditasIcon($laporan['komoditas']);
 
 $page_title = "Detail Ketersediaan Benih";
 require_once '../../../templates/header.php';
@@ -95,7 +137,6 @@ require_once '../../../templates/header.php';
         font-weight: 700;
         letter-spacing: 0.5px;
     }
-    
 </style>
 
 <main class="bg-dashboard min-vh-100 py-5 w-100" style="background-color: #f8f9fc;">
@@ -119,13 +160,14 @@ require_once '../../../templates/header.php';
         </div>
 
         <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-5">
-            <div class="p-1 bg-success"></div>
+            <div class="p-1" style="background-color: <?= $styleTanaman['color']; ?>;"></div>
             
             <div class="card-body p-4 p-lg-5">
                 <div class="row align-items-center mb-5">
                     <div class="col-md-auto mb-3 mb-md-0">
-                        <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 80px; height: 80px;">
-                            <i class="fas fa-seedling fa-3x"></i>
+                        <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" 
+                             style="width: 80px; height: 80px; background-color: <?= $styleTanaman['bg']; ?>; color: <?= $styleTanaman['color']; ?>;">
+                            <i class="fas <?= $styleTanaman['icon']; ?> fa-3x"></i>
                         </div>
                     </div>
                     <div class="col-md">

@@ -5,7 +5,7 @@
         <div class="bg-white text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
             <i class="fas fa-seedling fs-6"></i>
         </div>
-        SIPKBS
+        SIKBS
     </div>
 
     <div class="sidebar-user-profile">
@@ -46,7 +46,7 @@
         <?php else: ?>
             <li>
                 <a href="../admin/semua_laporan.php" class="<?php echo ($current_page == 'semua_laporan') ? 'active' : ''; ?>">
-                    <i class="fas fa-folder-open text-center" style="width: 25px;"></i> Data Nasional
+                    <i class="fas fa-folder-open text-center" style="width: 25px;"></i> Data Laporan
                 </a>
             </li>
             <li>
@@ -80,7 +80,7 @@
                     <i class="fas fa-sign-out-alt fa-3x"></i>
                 </div>                
                 <h4 class="fw-bold text-dark mb-2" id="logoutModalLabel">Konfirmasi Keluar</h4>
-                <p class="text-secondary mb-4">Apakah Anda yakin ingin keluar dari sistem SIPKBS?</p>                
+                <p class="text-secondary mb-4">Apakah Anda yakin ingin keluar dari sistem SIKBS?</p>                
                 <div class="d-flex w-100 gap-3 mt-3">
                     <button type="button" class="btn btn-light border w-50 py-2 fw-semibold rounded-3" data-bs-dismiss="modal">
                         Batal

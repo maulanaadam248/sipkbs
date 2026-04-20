@@ -5,9 +5,9 @@
             <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill mb-3 fw-semibold" style="letter-spacing: 1px;">
                 KEUNGGULAN SISTEM
             </span>
-            <h2 class="fw-bold text-dark mb-3" style="font-size: 2.5rem;">Layanan & Fitur Utama</h2>
+            <h2 class="fw-bold text-dark mb-3" style="font-size: 2.5rem;">Layanan & UPBS</h2>
             <p class="text-muted mx-auto" style="max-width: 600px; font-size: 1.1rem;">
-                Platform SIPKBS dirancang dengan arsitektur modern untuk memastikan pengelolaan data benih yang cepat, akurat, dan transparan.
+                Platform SIKBS dirancang dengan arsitektur modern untuk memastikan pengelolaan data benih yang cepat, akurat, dan transparan.
             </p>
         </div>
 
@@ -52,7 +52,7 @@
                     <img src="assets/img/TROA.jpeg" class="card-img-top" alt="Gedung TROA" style="height: 180px; object-fit: cover;">
                     <div class="card-body p-4 d-flex flex-column">
                         <h5 class="fw-bold text-dark mb-2">BRMP TROA</h5>
-                        <p class="text-muted small mb-4" style="line-height: 1.6;">Balai Penelitian Tanaman Rempah dan Obat. Laboratorium utama pengujian lada, cengkeh, jahe dan yang lainnya.</p>
+                        <p class="text-muted small mb-4" style="line-height: 1.6;">Bertugas memproduksi dan menyalurkan benih sumber dengan komoditas mandat tanaman rempah, tanaman obat, dan tanaman aromatik. </p>
                                                
                     </div>
                 </div>

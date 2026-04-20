@@ -107,6 +107,51 @@ require_once '../templates/header.php';
 require_once '../templates/sidebar.php';
 ?>
 
+<style>
+    /* TEMA TABEL HIJAU MUDA ADEM */
+    .table-green-theme {
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        border: 1px solid #d1fae5 !important;
+        width: 100% !important;
+        background-color: #ffffff !important;
+    }
+    
+    .table-green-theme thead th {
+        background-color: #d1fae5 !important;
+        color: #065f46 !important;
+        border-bottom: 2px solid #a7f3d0 !important;
+        border-top: none !important;
+        padding: 14px 15px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.3px !important;
+        vertical-align: middle !important;
+    }
+
+    .table-green-theme tbody tr {
+        background-color: #ffffff !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .table-green-theme tbody tr:nth-of-type(even) {
+        background-color: #f6fdf9 !important;
+    }
+
+    .table-green-theme tbody tr:hover {
+        background-color: #ecfdf5 !important;
+    }
+
+    .table-green-theme tbody td {
+        border-bottom: 1px solid #e2e8f0 !important;
+        border-top: none !important;
+        padding: 12px 15px !important;
+        color: #334155 !important;
+        vertical-align: middle !important;
+    }
+</style>
+
 <main class="main-content">
     <div class="container-fluid px-4 py-3">
         
@@ -116,13 +161,13 @@ require_once '../templates/sidebar.php';
                 <p class="text-muted mb-0">Daftar laporan ketersediaan benih dari <span class="fw-bold text-success">BRMP <?= htmlspecialchars($nama_balai); ?></span></p>
             </div>
             <div>
-                <a href="tambah_laporan.php" class="btn btn-success shadow-sm">
-                    <i class="fas fa-plus me-2"></i>Tambah Laporan
+                <a href="tambah_laporan.php" class="btn btn-success px-4 py-2 rounded-3 shadow-sm fw-bold d-inline-flex align-items-center" style="transition: all 0.3s ease;">
+                    <i class="fas fa-plus me-2"></i> Tambah Laporan
                 </a>
             </div>
         </div>
 
-        <div class="card border-0 shadow-sm mb-4">
+        <div class="card border-0 shadow-sm mb-4 rounded-3">
             <div class="card-header bg-white py-3">
                 <h6 class="m-0 font-weight-bold text-success"><i class="fas fa-filter me-2"></i>Filter Laporan</h6>
             </div>
@@ -130,11 +175,11 @@ require_once '../templates/sidebar.php';
                 <form method="GET" action="" class="row g-3 align-items-end">
                     <div class="col-md-4">
                         <label for="search" class="form-label text-muted small fw-bold">Cari Data</label>
-                        <input type="text" class="form-control" id="search" name="search" placeholder="Komoditas, Varietas..." value="<?= htmlspecialchars($search); ?>">
+                        <input type="text" class="form-control border-0 bg-light" id="search" name="search" placeholder="Komoditas, Varietas..." value="<?= htmlspecialchars($search); ?>">
                     </div>
                     <div class="col-md-3">
                         <label for="bulan" class="form-label text-muted small fw-bold">Bulan</label>
-                        <select class="form-select" id="bulan" name="bulan">
+                        <select class="form-select border-0 bg-light" id="bulan" name="bulan">
                             <option value="">Semua Bulan</option>
                             <?php
                             $bulans = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
@@ -145,27 +190,27 @@ require_once '../templates/sidebar.php';
                     </div>
                     <div class="col-md-2">
                         <label for="tahun" class="form-label text-muted small fw-bold">Tahun</label>
-                        <input type="number" class="form-control" id="tahun" name="tahun" placeholder="Contoh: 2024" value="<?= htmlspecialchars($tahun_filter); ?>" min="2020" step="1">
+                        <input type="number" class="form-control border-0 bg-light" id="tahun" name="tahun" placeholder="Contoh: <?= date('Y') ?>" value="<?= htmlspecialchars($tahun_filter); ?>" min="2020" step="1">
                     </div>
                     <div class="col-md-3">
                         <div class="d-grid gap-2 d-md-flex">
-                            <button type="submit" class="btn btn-success flex-grow-1"><i class="fas fa-search me-2"></i>Cari</button>
-                            <a href="riwayat_laporan.php" class="btn btn-outline-secondary" title="Reset Filter"><i class="fas fa-undo"></i></a>
+                            <button type="submit" class="btn btn-success flex-grow-1 rounded-3"><i class="fas fa-search me-2"></i>Cari</button>
+                            <a href="riwayat_laporan.php" class="btn btn-light border" title="Reset Filter"><i class="fas fa-undo"></i></a>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
 
-        <div class="card border-0 shadow-sm">
+        <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-5">
             <div class="card-header bg-white py-3">
                 <h6 class="m-0 font-weight-bold text-success"><i class="fas fa-list-alt me-2"></i>Data Laporan Balai</h6>
             </div>
             
             <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped align-middle mb-0">
-                        <thead class="table-light">
+                <div class="table-responsive px-2 pb-2 pt-2">
+                    <table class="table-green-theme align-middle mb-0" style="font-size: 0.95rem;">
+                        <thead>
                             <tr>
                                 <th>Komoditas (Varietas)</th>
                                 <th>Kelas Benih</th>
@@ -199,10 +244,10 @@ require_once '../templates/sidebar.php';
                                                 <div class="small text-muted mb-1"><?= htmlspecialchars($row['kelompok_komoditas']); ?></div>
                                             <?php endif; ?>
                                         <?php else: ?>
-                                            <div class="ps-4 text-muted small"><i class="fas fa-level-up-alt fa-rotate-90 me-1"></i></div>
+                                            <div class="ps-4 text-success opacity-50 small"><i class="fas fa-level-up-alt fa-rotate-90 me-2"></i></div>
                                         <?php endif; ?>
                                         
-                                        <div class="<?= !$show_komoditas ? 'ps-4' : ''; ?>">
+                                        <div class="<?= !$show_komoditas ? 'ps-5' : ''; ?>">
                                             <span class="fw-medium text-dark"><?= htmlspecialchars($row['varietas'] ?: '-'); ?></span>
                                         </div>
                                     </td>
@@ -210,7 +255,7 @@ require_once '../templates/sidebar.php';
                                     <td><?= htmlspecialchars($row['kelas_benih'] ?: '-'); ?></td>
                                     
                                     <td>
-                                        <div class="fw-bold text-primary"><?= number_format($row['jumlah_benih']); ?> <span class="text-dark fw-normal fs-6"><?= htmlspecialchars($row['satuan']); ?></span></div>
+                                        <div class="fw-bold text-dark"><?= number_format($row['jumlah_benih']); ?> <span class="fw-normal fs-6 text-muted"><?= htmlspecialchars($row['satuan']); ?></span></div>
                                         <div class="small text-success fw-medium">
                                             <?= !empty($row['harga_satuan']) ? 'Rp ' . number_format($row['harga_satuan'], 0, ',', '.') : '-'; ?>
                                         </div>
@@ -225,25 +270,26 @@ require_once '../templates/sidebar.php';
                                         elseif($status == 'Terbatas') $outline_class = 'border-warning text-warning-emphasis'; 
                                         elseif($status == 'PO') $outline_class = 'border-primary text-primary'; 
                                         ?>
-                                        <span class="badge bg-transparent border <?= $outline_class; ?> px-3 py-2 rounded-2" style="letter-spacing: 0.5px;">
+                                        <span class="badge bg-transparent border <?= $outline_class; ?> px-3 py-2 rounded-2 fw-bold" style="letter-spacing: 0.5px;">
                                             <?= htmlspecialchars($status); ?>
                                         </span>
                                     </td>
                                     
                                     <td>
-                                        <div><?= htmlspecialchars($row['bulan']); ?></div>
-                                        <div class="fw-bold text-muted"><?= htmlspecialchars($row['tahun']); ?></div>
+                                        <div class="fw-medium text-dark"><?= htmlspecialchars($row['bulan']); ?></div>
+                                        <div class="fw-bold text-muted small"><?= htmlspecialchars($row['tahun']); ?></div>
                                     </td>
                                     
                                     <td class="text-center">
                                         <div class="d-flex flex-column gap-2 align-items-center justify-content-center">
-                                            <div class="btn-group btn-group-sm" role="group">
-                                                <a href="edit_laporan.php?id=<?= $row['id_laporan']; ?>" class="btn btn-outline-primary" title="Edit"><i class="fas fa-edit"></i></a>
-                                                <a href="hapus_laporan.php?id=<?= $row['id_laporan']; ?>" class="btn btn-outline-danger" title="Hapus" onclick="konfirmasiHapus(event, this.href)"><i class="fas fa-trash"></i></a>
+                                            <div class="btn-group btn-group-sm rounded-3 overflow-hidden shadow-sm" role="group">
+                                                <a href="detail_laporan.php?id=<?= $row['id_laporan']; ?>" class="btn btn-white border" title="Detail"><i class="fas fa-eye text-info"></i></a>
+                                                <a href="edit_laporan.php?id=<?= $row['id_laporan']; ?>" class="btn btn-white border" title="Edit"><i class="fas fa-edit text-primary"></i></a>
+                                                <a href="hapus_laporan.php?id=<?= $row['id_laporan']; ?>" class="btn btn-white border" title="Hapus" onclick="konfirmasiHapus(event, this.href)"><i class="fas fa-trash text-danger"></i></a>
                                             </div>
                                             
                                             <?php if ($show_komoditas && !empty($row['komoditas'])): ?>
-                                                <button class="btn btn-sm btn-success text-white w-100" style="font-size: 0.75rem;" onclick="addVarietyForKomoditas('<?= htmlspecialchars(addslashes($row['komoditas'])); ?>')">
+                                                <button class="btn btn-sm btn-success text-white w-100 rounded-3 shadow-sm" style="font-size: 0.75rem; transition: all 0.2s;" onclick="addVarietyForKomoditas('<?= htmlspecialchars(addslashes($row['komoditas'])); ?>')">
                                                     <i class="fas fa-plus me-1"></i>Varietas
                                                 </button>
                                             <?php endif; ?>
@@ -255,9 +301,10 @@ require_once '../templates/sidebar.php';
                             else:
                             ?>
                                 <tr>
-                                    <td colspan="6" class="text-center py-5 text-muted">
+                                    <td colspan="6" class="text-center py-5 text-muted bg-white">
                                         <i class="fas fa-folder-open fa-3x mb-3 opacity-25"></i>
-                                        <p class="mb-0">Belum ada riwayat laporan.</p>
+                                        <p class="mb-0 fw-bold">Belum ada riwayat laporan.</p>
+                                        <small>Data yang Anda inputkan akan muncul di sini.</small>
                                     </td>
                                 </tr>
                             <?php endif; ?>
@@ -286,7 +333,7 @@ function konfirmasiHapus(event, url_hapus) {
         showCancelButton: true,
         confirmButtonColor: '#dc3545',
         cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Ya, Hapus!',
+        confirmButtonText: '<i class="fas fa-trash me-2"></i> Ya, Hapus!',
         cancelButtonText: 'Batal',
         reverseButtons: true
     }).then((result) => {
@@ -298,6 +345,7 @@ function konfirmasiHapus(event, url_hapus) {
 </script>
 
 <?php 
+// Notifikasi SweetAlert untuk Session Success/Error
 if(isset($_SESSION['success'])): ?>
     <script>
         Swal.fire({

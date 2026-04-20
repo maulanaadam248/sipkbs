@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top transition-nav" id="mainNav">
     <div class="container">
         <a class="navbar-brand fw-bold" href="#home">
-            <i class="fas fa-seedling me-2"></i> SIPKBS
+            <i class="fas fa-seedling me-2"></i> SIKBS
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
