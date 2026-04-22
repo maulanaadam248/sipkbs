@@ -22,7 +22,7 @@
                     <div class="card-body p-4 d-flex flex-column">
                         <h5 class="fw-bold text-dark mb-2">
                             <a href="https://palma.brmp.pertanian.go.id/#layanan" target="_blank" class="text-decoration-none text-dark stretched-link">
-                                UPBS PALMA
+                                UPBS BRMP PALMA
                             </a>
                         </h5>
                         <p class="text-muted small mb-4" style="line-height: 1.6;">Bertugas memproduksi dan menyalurkan benih sumber dengan komoditas mandat tanaman palma (kelapa, pinang, gewang, kurma, nipah, aren, lontar, sawit, dan sagu).</p>
@@ -36,7 +36,7 @@
                     <div class="card-body p-4 d-flex flex-column">
                         <h5 class="fw-bold text-dark mb-2">
                             <a href="https://tanamanindustri.brmp.pertanian.go.id/layanan/layanan/penyediaan-benih-dan-pengelolaan-produk" target="_blank" class="text-decoration-none text-dark stretched-link">
-                                UPBS TRI
+                                UPBS BRMP TRI
                             </a>
                         </h5>
                         <p class="text-muted small mb-4" style="line-height: 1.6;">Bertugas memproduksi dan menyalurkan benih sumber dengan komoditas mandat tanaman industri dan tanaman penyegar.</p>
@@ -50,7 +50,7 @@
                     <div class="card-body p-4 d-flex flex-column">
                         <h5 class="fw-bold text-dark mb-2">
                             <a href="https://tanamanpemanis.brmp.pertanian.go.id/layanan/sistem-integrasi-informasi-pelayanan-brmp-tas/layanan-benih-sumber" target="_blank" class="text-decoration-none text-dark stretched-link">
-                                UPBS TAS
+                                UPBS BRMP TAS
                             </a>
                         </h5>
                         <p class="text-muted small mb-4" style="line-height: 1.6;">Bertugas memproduksi dan menyalurkan benih sumber dengan komoditas mandat tanaman pemanis, tanaman serat, tembakau, dan tanaman minyak industri.</p>
@@ -64,7 +64,7 @@
                     <div class="card-body p-4 d-flex flex-column">
                         <h5 class="fw-bold text-dark mb-2">
                             <a href="https://rempahobat.brmp.pertanian.go.id/layanan/layanan/unit-pengelola-benih-sumber" target="_blank" class="text-decoration-none text-dark stretched-link">
-                                UPBS TROA
+                                UPBS BRMP TROA
                             </a>
                         </h5>
                         <p class="text-muted small mb-4" style="line-height: 1.6;">Bertugas memproduksi dan menyalurkan benih sumber dengan komoditas mandat tanaman rempah, tanaman obat, dan tanaman aromatik.</p>
