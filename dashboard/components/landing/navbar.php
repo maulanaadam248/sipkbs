@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top transition-nav" id="mainNav">
+<nav class="navbar navbar-expand-lg navbar-light fixed-top transition-nav" id="mainNav">
     <div class="container">
         <a class="navbar-brand fw-bold" href="#home">
             <i class="fas fa-seedling me-2"></i> SIKBS
@@ -32,7 +32,16 @@
         padding-bottom: 20px;
     }
 
-    /* KONDISI KEDUA (SETELAH DI-SCROLL): Berubah jadi Putih */
+    /* Warna teks dan logo saat BELUM di-scroll (Berwarna Gelap) */
+    .transition-nav .nav-link {
+        color: #333 !important; /* Teks warna gelap */
+        font-weight: 500;
+    }
+    .transition-nav .navbar-brand {
+        color: #198754 !important; /* Logo SIKBS warna hijau */
+    }
+
+    /* KONDISI KEDUA (SETELAH DI-SCROLL): Background Berubah jadi Putih */
     .navbar-scrolled {
         background-color: #ffffff !important; 
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -40,20 +49,14 @@
         padding-bottom: 10px;
     }
 
-    /* Memastikan teks/link berubah warna jadi gelap saat background putih */
-    .navbar-scrolled .nav-link {
-        color: #333 !important;
-        font-weight: 500;
-    }
-
-    /* Warna logo/brand saat di-scroll */
-    .navbar-scrolled .navbar-brand {
-        color: #198754 !important; 
-    }
-
-    /* Efek hover pada link */
-    .nav-link:hover {
+    /* Efek hover pada link (berlaku di kedua kondisi) */
+    .transition-nav .nav-link:hover {
         color: #22c55e !important; 
+    }
+    
+    /* Pengecualian khusus untuk tombol Login agar teksnya tetap putih saat di-hover */
+    .transition-nav .btn-success:hover {
+        color: #ffffff !important;
     }
 </style>
 
@@ -66,13 +69,9 @@
             if (window.scrollY > 50) {
                 // Jika halaman di-scroll ke bawah lebih dari 50px
                 nav.classList.add('navbar-scrolled');
-                nav.classList.remove('navbar-dark'); 
-                nav.classList.add('navbar-light');   
             } else {
                 // Jika halaman berada di paling atas
                 nav.classList.remove('navbar-scrolled');
-                nav.classList.add('navbar-dark');    
-                nav.classList.remove('navbar-light');
             }
         }
 

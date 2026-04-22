@@ -15,6 +15,7 @@
             
             <div class="col-lg-3 col-md-6">
                 <div class="card h-100 border-0 rounded-4 overflow-hidden contact-card-premium fade-in">
+                      <img src="assets/img/PALMA.jpeg" class="card-img-top" alt="Gedung PALMA" style="height: 180px; object-fit: cover;">
                    <div class="card-body p-4 d-flex flex-column">
                         <h5 class="fw-bold text-dark mb-2">BRMP PALMA</h5>
                       
@@ -48,7 +49,8 @@
             </div>
 
             <div class="col-lg-3 col-md-6">
-                <div class="card h-100 border-0 rounded-4 overflow-hidden contact-card-premium fade-in" style="animation-delay: 0.1s;">                    
+                <div class="card h-100 border-0 rounded-4 overflow-hidden contact-card-premium fade-in" style="animation-delay: 0.1s;">  
+                    <img src="assets/img/TRI.png" class="card-img-top" alt="Gedung TRI" style="height: 180px; object-fit: cover;">                  
                     <div class="card-body p-4 d-flex flex-column">
                         <h5 class="fw-bold text-dark mb-2">BRMP TRI</h5>
                         
@@ -80,7 +82,8 @@
             </div>
 
             <div class="col-lg-3 col-md-6">
-                <div class="card h-100 border-0 rounded-4 overflow-hidden contact-card-premium fade-in" style="animation-delay: 0.2s;">                   
+                <div class="card h-100 border-0 rounded-4 overflow-hidden contact-card-premium fade-in" style="animation-delay: 0.2s;">    
+                      <img src="assets/img/TAS2.jpeg" class="card-img-top" alt="Gedung PALMA" style="height: 180px; object-fit: cover;">               
                     <div class="card-body p-4 d-flex flex-column">
                         <h5 class="fw-bold text-dark mb-2">BRMP TAS</h5>
                         <div class="mt-auto">
@@ -112,6 +115,7 @@
 
             <div class="col-lg-3 col-md-6">
                 <div class="card h-100 border-0 rounded-4 overflow-hidden contact-card-premium fade-in" style="animation-delay: 0.3s;">
+                     <img src="assets/img/TROA.jpeg" class="card-img-top" alt="Gedung TROA" style="height: 180px; object-fit: cover;">
                     <div class="card-body p-4 d-flex flex-column">
                         <h5 class="fw-bold text-dark mb-2">BRMP TROA</h5>
                         <div class="mt-auto">

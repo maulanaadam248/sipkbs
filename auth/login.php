@@ -30,28 +30,37 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
     
-    // Query untuk login
+    // Query untuk login HANYA mencari berdasarkan username
     $query_login = "SELECT u.*, b.nama_balai FROM users u 
                    LEFT JOIN balai b ON u.balai_id = b.id_balai 
-                   WHERE u.username = ? AND u.password = ?";
+                   WHERE u.username = ?";
     $stmt = mysqli_prepare($conn, $query_login);
-    mysqli_stmt_bind_param($stmt, "ss", $username, $password);
+    mysqli_stmt_bind_param($stmt, "s", $username);
     mysqli_stmt_execute($stmt);
     $result_login = mysqli_stmt_get_result($stmt);
     
+    // Jika username ditemukan
     if(mysqli_num_rows($result_login) == 1) {
         $user = mysqli_fetch_assoc($result_login);
         
-        // Set session
-        $_SESSION['user_id'] = $user['id_user'];
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['nama'] = $user['nama'];
-        $_SESSION['role'] = $user['role'];
-        $_SESSION['balai_id'] = $user['balai_id'];
-        $_SESSION['nama_balai'] = $user['nama_balai'];
-        
-        header("Location: ../dashboard/dashboard.php");
-        exit();
+        // Cek kecocokan password: 
+        // 1. password_verify (untuk password baru yang sudah di-hash)
+        // 2. === (fallback untuk akun lama yang password-nya belum di-hash)
+        if(password_verify($password, $user['password']) || $password === $user['password']) {
+            
+            // Set session
+            $_SESSION['user_id'] = $user['id_user'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['nama'] = $user['nama'];
+            $_SESSION['role'] = $user['role'];
+            $_SESSION['balai_id'] = $user['balai_id'];
+            $_SESSION['nama_balai'] = $user['nama_balai'];
+            
+            header("Location: ../dashboard/dashboard.php");
+            exit();
+        } else {
+            $error = "Username atau password salah!";
+        }
     } else {
         $error = "Username atau password salah!";
     }

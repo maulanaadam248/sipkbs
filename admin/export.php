@@ -17,8 +17,7 @@ require_once '../templates/sidebar.php';
 ?>
 
 <style>
-    /* Bikin tombol export jadi lega dan profesional */
-    .btn-export-classic {
+     .btn-export-classic {
         background-color: #16a34a !important;
         color: white !important;
         padding: 12px 35px !important;
@@ -35,7 +34,7 @@ require_once '../templates/sidebar.php';
     }
     .btn-back-classic {
         background-color: #ffffff !important;
-        color: #475569 !important; /* Warna abu-abu kebiruan yang elegan */
+        color: #475569 !important; 
         border: 1px solid #cbd5e1 !important;
         padding: 8px 24px !important;
         border-radius: 8px !important;
@@ -49,7 +48,7 @@ require_once '../templates/sidebar.php';
     
     .btn-back-classic:hover {
         background-color: #f8fafc !important;
-        color: #1e293b !important; /* Teks jadi lebih gelap saat di-hover */
+        color: #1e293b !important; 
         border-color: #94a3b8 !important;
         transform: translateY(-2px) !important;
         box-shadow: 0 4px 6px rgba(0,0,0,0.05) !important;
