@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once '../config/database.php';
-
+require __DIR__ . '/../config/database.php';
+global $conn;
 if(!isset($_POST['btn_export'])) {
     header("Location: export.php");
     exit();

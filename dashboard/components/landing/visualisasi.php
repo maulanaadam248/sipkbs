@@ -1,4 +1,5 @@
 <?php 
+
 // Fungsi sinkronisasi warna Balai
 if (!function_exists('getBalaiColor')) {
     function getBalaiColor($nama_balai) {
@@ -21,7 +22,7 @@ if($result_balai) {
     }
 }
 
-// 2. Ambil Data Status Ketersediaan & LOGIKA WARNA
+// 2. Ambil Data Status Ketersediaan & LOGIKA WARNA DINAMIS
 $query_status = "SELECT status_ketersediaan, COUNT(*) as jumlah FROM laporan GROUP BY status_ketersediaan";
 $result_status = mysqli_query($conn, $query_status);
 $label_status = []; $data_status = []; $warna_status = [];
@@ -32,13 +33,20 @@ if($result_status) {
         $label_status[] = $status;
         $data_status[] = $row['jumlah'];
         
-        // Memisahkan warna dengan tegas
-        switch(strtolower(trim($status))) {
-            case 'tersedia': $warna_status[] = '#10b981'; break; // Hijau Zamrud
-            case 'po': $warna_status[] = '#3b82f6'; break; // Biru Terang
-            case 'terbatas': $warna_status[] = '#f59e0b'; break; // Oranye
-            case 'tidak tersedia': $warna_status[] = '#ef4444'; break; // Merah
-            default: $warna_status[] = '#8b5cf6'; break; // Ungu
+        // Memisahkan warna dengan tegas menggunakan pendeteksi kata
+        $st_lower = strtolower(trim($status));
+        if (strpos($st_lower, 'tidak') !== false) {
+            $warna_status[] = '#ef4444'; // Merah
+        } elseif (strpos($st_lower, 'tersedia') !== false) {
+            $warna_status[] = '#10b981'; // Hijau Zamrud
+        } elseif (strpos($st_lower, 'pesan') !== false) {
+            $warna_status[] = '#0dcaf0'; // Biru Muda (Cyan)
+        } elseif (strpos($st_lower, 'potensi') !== false) {
+            $warna_status[] = '#0d6efd'; // Biru Tua (Primary)
+        } elseif (strpos($st_lower, 'batas') !== false) {
+            $warna_status[] = '#f59e0b'; // Oranye
+        } else {
+            $warna_status[] = '#8b5cf6'; // Ungu (Default)
         }
     }
 }
@@ -168,12 +176,22 @@ $result_komoditas = mysqli_query($conn, $query_komoditas);
                                         // AMBIL WARNA BALAI SECARA DINAMIS
                                         $warna_balai_tabel = getBalaiColor($row['nama_balai']);
                                         
+                                        // LOGIKA BADGE TABEL DINAMIS (SAMA SEPERTI QUERY ATAS)
                                         $status = $row['status_ketersediaan'];
+                                        $st_lower = strtolower(trim($status));
                                         $badge_class = 'border-secondary text-secondary'; 
-                                        if(strtolower(trim($status)) == 'tersedia') $badge_class = 'border-success text-success'; 
-                                        elseif(strtolower(trim($status)) == 'tidak tersedia') $badge_class = 'border-danger text-danger'; 
-                                        elseif(strtolower(trim($status)) == 'terbatas') $badge_class = 'border-warning text-warning-emphasis'; 
-                                        elseif(strtolower(trim($status)) == 'po') $badge_class = 'border-primary text-primary'; 
+                                        
+                                        if (strpos($st_lower, 'tidak') !== false) {
+                                            $badge_class = 'border-danger text-danger'; 
+                                        } elseif (strpos($st_lower, 'tersedia') !== false) {
+                                            $badge_class = 'border-success text-success'; 
+                                        } elseif (strpos($st_lower, 'pesan') !== false) {
+                                            $badge_class = 'border-info text-info-emphasis'; // Biru Muda
+                                        } elseif (strpos($st_lower, 'potensi') !== false) {
+                                            $badge_class = 'border-primary text-primary'; // Biru Tua
+                                        } elseif (strpos($st_lower, 'batas') !== false) {
+                                            $badge_class = 'border-warning text-warning-emphasis'; // Oranye
+                                        }
                                 ?>
                                     <tr>
                                         <td class="text-center fw-bold text-muted"><?= $no++; ?></td>
@@ -193,7 +211,11 @@ $result_komoditas = mysqli_query($conn, $query_komoditas);
                                             <div class="fw-bold text-dark"><?= number_format($row['jumlah_benih']); ?> <span class="small fw-normal"><?= htmlspecialchars($row['satuan']); ?></span></div>
                                             <div class="small text-success fw-medium"><?= !empty($row['harga_satuan']) ? 'Rp ' . number_format($row['harga_satuan'], 0, ',', '.') : '-'; ?></div>
                                         </td>
-                                        <td><span class="badge bg-transparent border <?= $badge_class; ?> px-2 py-1 rounded-2 fw-bold" style="font-size: 0.75rem;"><?= strtoupper(htmlspecialchars($status)); ?></span></td>
+                                        <td>
+                                            <span class="badge bg-transparent border <?= $badge_class; ?> px-2 py-1 rounded-2 fw-bold" style="font-size: 0.75rem;">
+                                                <?= htmlspecialchars($status); ?>
+                                            </span>
+                                        </td>
                                         <td>
                                             <div class="fw-medium text-dark"><?= htmlspecialchars($row['bulan']); ?></div>
                                             <div class="small text-muted fw-bold"><?= htmlspecialchars($row['tahun']); ?></div>
@@ -230,8 +252,6 @@ $result_komoditas = mysqli_query($conn, $query_komoditas);
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     
-    // ... (Grafik Balai biarkan seperti sebelumnya) ...
-
     // MENGGUNAKAN ID BARU: grafikStatusBenih
     const ctxStatus = document.getElementById('grafikStatusBenih');
     
@@ -239,15 +259,17 @@ document.addEventListener("DOMContentLoaded", function() {
         const chartLabels = <?= json_encode($label_status); ?>;
         const chartData = <?= json_encode($data_status); ?>;
 
+        // LOGIKA WARNA CHART JS DINAMIS
         const chartColors = chartLabels.map(label => {
             let namaStatus = label.trim().toLowerCase();
             
-            if (namaStatus === 'tersedia') return '#10b981';       // Hijau
-            if (namaStatus === 'po') return '#3b82f6';             // Biru
-            if (namaStatus === 'terbatas') return '#f59e0b';       // Oranye
-            if (namaStatus === 'tidak tersedia') return '#ef4444'; // Merah
+            if (namaStatus.includes('tidak')) return '#ef4444';       // Merah (Tidak Tersedia)
+            if (namaStatus.includes('tersedia')) return '#10b981';    // Hijau (Tersedia)
+            if (namaStatus.includes('pesan')) return '#0dcaf0';       // Cyan/Biru Muda (Sudah Dipesan)
+            if (namaStatus.includes('potensi')) return '#0d6efd';     // Primary/Biru Tua (Potensi Panen)
+            if (namaStatus.includes('batas')) return '#f59e0b';       // Oranye (Terbatas)
             
-            return '#8b5cf6'; // Ungu
+            return '#8b5cf6'; // Ungu/Lainnya (Default)
         });
 
         new Chart(ctxStatus, {

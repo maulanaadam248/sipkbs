@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once '../config/database.php';
-
+require __DIR__ . '/../config/database.php';
+global $conn;
 // Fungsi sinkronisasi warna Balai (Ditambahkan di sini agar sinkron)
 if (!function_exists('getBalaiColor')) {
     function getBalaiColor($nama_balai) {

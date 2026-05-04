@@ -1,38 +1,49 @@
 <?php
 session_start();
-require_once '../config/database.php';
-
-// Cek apakah user sudah login
+require __DIR__ . '/../config/database.php';
+global $conn;
+// 1. Cek apakah user sudah login
 if(!isset($_SESSION['user_id'])) {
     header("Location: ../index.php");
     exit();
 }
 
-// Cek role - hanya operator yang bisa edit laporan
-if($_SESSION['role'] != 'operator') {
+// 2. BUKA GEMBOK: Izinkan Admin DAN Operator masuk
+if($_SESSION['role'] != 'admin' && $_SESSION['role'] != 'operator') {
     header("Location: ../dashboard/dashboard.php");
     exit();
 }
 
-// Ambil ID laporan dari URL
-$id_laporan = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+// Tentukan arah kembali (redirect)
+$redirect = ($_SESSION['role'] == 'admin') ? "../admin/semua_laporan.php" : "riwayat_laporan.php";
 
-if($id_laporan == 0) {
-    $_SESSION['error'] = "ID laporan tidak valid!";
-    header("Location: riwayat_laporan.php");
+if(!isset($_GET['id'])) {
+    header("Location: $redirect");
     exit();
 }
 
-// Ambil data laporan berdasarkan ID dan balai user
-$query = "SELECT * FROM laporan WHERE id_laporan = ? AND balai_id = ?";
-$stmt = mysqli_prepare($conn, $query);
-mysqli_stmt_bind_param($stmt, "ii", $id_laporan, $_SESSION['balai_id']);
+$laporan_id = $_GET['id'];
+
+// 4. LOGIKA KEAMANAN DATA
+if($_SESSION['role'] == 'admin') {
+    // Jika Admin: Bisa edit SEMUA laporan
+    $query = "SELECT l.*, b.nama_balai FROM laporan l JOIN balai b ON l.balai_id = b.id_balai WHERE l.id_laporan = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $laporan_id);
+} else {
+    // Jika Operator: HANYA bisa edit laporan milik BALAINYA SENDIRI
+    $balai_id_operator = $_SESSION['balai_id'];
+    $query = "SELECT l.*, b.nama_balai FROM laporan l JOIN balai b ON l.balai_id = b.id_balai WHERE l.id_laporan = ? AND l.balai_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "ii", $laporan_id, $balai_id_operator);
+}
+
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 
 if(mysqli_num_rows($result) == 0) {
-    $_SESSION['error'] = "Laporan tidak ditemukan!";
-    header("Location: riwayat_laporan.php");
+    $_SESSION['error'] = "Data tidak ditemukan atau Anda tidak memiliki akses!";
+    header("Location: $redirect");
     exit();
 }
 
@@ -43,6 +54,8 @@ $current_page = 'riwayat_laporan';
 $css_path = '../assets/css/modern-ui.css';
 require_once '../templates/header.php';
 require_once '../templates/sidebar.php';
+// Tentukan URL kembali berdasarkan role
+$url_kembali = ($_SESSION['role'] == 'admin') ? "../admin/semua_laporan.php" : "riwayat_laporan.php";
 ?>
 
 <style>
@@ -60,6 +73,11 @@ require_once '../templates/sidebar.php';
         transform: translateY(-3px);
         box-shadow: 0 8px 15px rgba(239, 68, 68, 0.1);
     }
+    
+    .btn-modern-action { padding: 12px 28px !important; font-size: 0.95rem !important; border-radius: 10px !important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; font-weight: 700 !important; text-decoration: none !important; }
+    .btn-back-modern { background-color: #ffffff !important; color: #64748b !important; border: 2px solid #e2e8f0 !important; }
+    .btn-back-modern:hover { background-color: #f8fafc !important; color: #1e293b !important; border-color: #94a3b8 !important; transform: translateY(-3px) !important; }
+  
 
     .btn-modern-save {
         background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
@@ -93,8 +111,8 @@ require_once '../templates/sidebar.php';
                         <p class="text-secondary mb-0">Memperbarui data: <strong class="text-success"><?php echo htmlspecialchars($laporan['komoditas']); ?> <?php echo !empty($laporan['varietas']) ? ' - ' . htmlspecialchars($laporan['varietas']) : ''; ?></strong></p>
                     </div>
                     <div>
-                        <a href="riwayat_laporan.php" class="btn btn-light border text-secondary fw-semibold rounded-pill px-4 py-2 shadow-sm d-inline-flex align-items-center transition-all">
-                            <i class="fas fa-arrow-left me-2"></i> Kembali ke Riwayat
+                      <a href="<?= $url_kembali; ?>" class="btn-modern-action btn-back-modern shadow-sm">
+                            <i class="fas fa-arrow-left me-2"></i> Kembali
                         </a>
                     </div>
                 </div>
@@ -228,7 +246,7 @@ require_once '../templates/sidebar.php';
                             </div>
 
                             <div class="d-flex justify-content-end gap-3 mt-5 pt-4 border-top">
-                                <a href="riwayat_laporan.php" class="btn btn-modern-cancel fw-bold rounded-3" style="padding: 12px 32px; font-size: 1rem;">
+                                <a href="<?= $url_kembali; ?>" class="btn btn-modern-cancel fw-bold rounded-3" style="padding: 12px 32px; font-size: 1rem;">
                                     Batal
                                 </a>
                                 <button type="submit" name="edit_laporan" class="btn btn-modern-save fw-bold rounded-3" style="padding: 12px 32px; font-size: 1rem;">

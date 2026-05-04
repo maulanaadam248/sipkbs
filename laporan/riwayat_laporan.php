@@ -1,6 +1,7 @@
 <?php
 session_start();
-require_once '../config/database.php';
+require __DIR__ . '/../config/database.php';
+global $conn;
 
 // Cek apakah user sudah login
 if(!isset($_SESSION['user_id'])) {
@@ -21,11 +22,6 @@ $nama = $_SESSION['nama'];
 $role = $_SESSION['role'];
 $balai_id = $_SESSION['balai_id'];
 $nama_balai = $_SESSION['nama_balai'];
-
-// Pagination
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$per_page = 10;
-$start = ($page - 1) * $per_page;
 
 // Filter
 $bulan_filter = isset($_GET['bulan']) ? $_GET['bulan'] : '';
@@ -57,48 +53,13 @@ if(!empty($search)) {
     $types .= "sss";
 }
 
-// Urutkan berdasarkan komoditas lama dulu, komoditas kosong (varietas baru) di akhir, lalu id_laporan ASC
-$query_laporan .= " ORDER BY CASE WHEN komoditas = '' OR komoditas IS NULL THEN 1 ELSE 0 END, komoditas ASC, id_laporan ASC";
-$query_laporan .= " LIMIT ?, ?";
-$params[] = $start;
-$params[] = $per_page;
-$types .= "ii";
+$query_laporan .= " ORDER BY id_laporan DESC";
+// LIMIT DIHAPUS AGAR SEMUA DATA TAMPIL TANPA TERPOTONG
 
 $stmt = mysqli_prepare($conn, $query_laporan);
 mysqli_stmt_bind_param($stmt, $types, ...$params);
 mysqli_stmt_execute($stmt);
 $result_laporan = mysqli_stmt_get_result($stmt);
-
-// Query untuk total data (pagination)
-$query_total = "SELECT COUNT(*) as total FROM laporan WHERE balai_id = ?";
-$total_params = [$balai_id];
-$total_types = "i";
-
-if(!empty($bulan_filter)) {
-    $query_total .= " AND bulan = ?";
-    $total_params[] = $bulan_filter;
-    $total_types .= "s";
-}
-if(!empty($tahun_filter)) {
-    $query_total .= " AND tahun = ?";
-    $total_params[] = $tahun_filter;
-    $total_types .= "i";
-}
-if(!empty($search)) {
-    $query_total .= " AND (komoditas LIKE ? OR varietas LIKE ? OR kelompok_komoditas LIKE ?)";
-    $search_param = "%$search%";
-    $total_params[] = $search_param;
-    $total_params[] = $search_param;
-    $total_params[] = $search_param;
-    $total_types .= "sss";
-}
-
-$stmt_total = mysqli_prepare($conn, $query_total);
-mysqli_stmt_bind_param($stmt_total, $total_types, ...$total_params);
-mysqli_stmt_execute($stmt_total);
-$result_total = mysqli_stmt_get_result($stmt_total);
-$total_data = mysqli_fetch_assoc($result_total)['total'];
-$total_pages = ceil($total_data / $per_page);
 
 $page_title = "Riwayat Laporan";
 $current_page = 'riwayat_laporan';
@@ -113,7 +74,6 @@ require_once '../templates/sidebar.php';
         border-collapse: separate !important;
         border-spacing: 0 !important;
         border-radius: 12px !important;
-        overflow: hidden !important;
         border: 1px solid #d1fae5 !important;
         width: 100% !important;
         background-color: #ffffff !important;
@@ -128,6 +88,12 @@ require_once '../templates/sidebar.php';
         font-weight: 700 !important;
         letter-spacing: 0.3px !important;
         vertical-align: middle !important;
+        
+        /* Bikin judul nempel di atas (Sticky Header) */
+        position: sticky !important;
+        top: 0 !important; 
+        z-index: 10 !important; 
+        box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1); 
     }
 
     .table-green-theme tbody tr {
@@ -150,6 +116,12 @@ require_once '../templates/sidebar.php';
         color: #334155 !important;
         vertical-align: middle !important;
     }
+    
+    .table-responsive {
+        /* Tentukan tinggi maksimal tabel sebelum scrollbar muncul */
+        max-height: 600px; 
+        overflow-y: auto;
+    }
 </style>
 
 <main class="main-content">
@@ -161,6 +133,9 @@ require_once '../templates/sidebar.php';
                 <p class="text-muted mb-0">Daftar laporan ketersediaan benih dari <span class="fw-bold text-success">BRMP <?= htmlspecialchars($nama_balai); ?></span></p>
             </div>
             <div>
+                <button type="button" class="btn btn-outline-danger fw-bold rounded-3 shadow-sm px-3 py-2 me-2" data-bs-toggle="modal" data-bs-target="#hapusMassalModal">
+                    <i class="fas fa-trash-alt me-2"></i> Kosongkan Bulan Tertentu
+                </button>
                 <a href="tambah_laporan.php" class="btn btn-success px-4 py-2 rounded-3 shadow-sm fw-bold d-inline-flex align-items-center" style="transition: all 0.3s ease;">
                     <i class="fas fa-plus me-2"></i> Tambah Laporan
                 </a>
@@ -209,107 +184,104 @@ require_once '../templates/sidebar.php';
             
             <div class="card-body p-0">
                 <div class="table-responsive px-2 pb-2 pt-2">
-                    <table class="table-green-theme align-middle mb-0" style="font-size: 0.95rem;">
-                        <thead>
-                            <tr>
-                                <th>Komoditas (Varietas)</th>
-                                <th>Kelas Benih</th>
-                                <th>Stok & Harga</th>
-                                <th>Status Ketersediaan</th>
-                                <th>Periode</th>
-                                <th class="text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
-                            $last_komoditas = '';
-                            $komoditas_counter = 0;
-                            
-                            if(mysqli_num_rows($result_laporan) > 0):
-                                while($row = mysqli_fetch_assoc($result_laporan)): 
-                                    
-                                    $show_komoditas = ($row['komoditas'] !== $last_komoditas);
-                                    if ($show_komoditas) {
-                                        $last_komoditas = $row['komoditas'];
-                                        $komoditas_counter++;
+                  <table class="table-green-theme align-middle mb-0" style="font-size: 0.95rem;">
+                    <thead>
+                        <tr>
+                            <th>Komoditas (Varietas)</th>
+                            <th>Kelas Benih</th>
+                            <th>Stok & Harga</th>
+                            <th>Satuan</th>
+                            <th>Status Ketersediaan</th>
+                            <th>Periode</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        $last_komoditas = ''; $komoditas_counter = 0;
+                        
+                        if(mysqli_num_rows($result_laporan) > 0):
+                            while($row = mysqli_fetch_assoc($result_laporan)): 
+                                $show_komoditas = ($row['komoditas'] !== $last_komoditas);
+                                if ($show_komoditas) { $last_komoditas = $row['komoditas']; $komoditas_counter++; }
+                                
+                                // BACA METADATA SATUAN
+                                $stok_unit = ''; $harga_unit = '';
+                                if(strpos($row['deskripsi'], 'MetaUnit=[') !== false) {
+                                    preg_match('/MetaUnit=\[([^|]+)\|([^\]]+)\]/', $row['deskripsi'], $m);
+                                    if(isset($m[1]) && $m[1] != '-') $stok_unit = ' ' . trim($m[1]);
+                                    if(isset($m[2]) && $m[2] != '-') {
+                                        $harga_unit = trim($m[2]);
+                                        if(strpos($harga_unit, '/') === false) $harga_unit = '/' . $harga_unit;
                                     }
-                            ?>
-                                <tr>
-                                    <td>
-                                        <?php if ($show_komoditas): ?>
-                                            <div class="fw-bold text-success fs-6">
-                                                <span class="text-dark me-1"><?= $komoditas_counter; ?>.</span><?= htmlspecialchars($row['komoditas']); ?>
-                                            </div>
-                                            <?php if(!empty($row['kelompok_komoditas'])): ?>
-                                                <div class="small text-muted mb-1"><?= htmlspecialchars($row['kelompok_komoditas']); ?></div>
-                                            <?php endif; ?>
-                                        <?php else: ?>
-                                            <div class="ps-4 text-success opacity-50 small"><i class="fas fa-level-up-alt fa-rotate-90 me-2"></i></div>
-                                        <?php endif; ?>
-                                        
-                                        <div class="<?= !$show_komoditas ? 'ps-5' : ''; ?>">
-                                            <span class="fw-medium text-dark"><?= htmlspecialchars($row['varietas'] ?: '-'); ?></span>
+                                }
+                        ?>
+                            <tr>
+                                <td>
+                                    <?php if ($show_komoditas): ?>
+                                        <div class="fw-bold text-success fs-6"><span class="text-dark me-1"><?= $komoditas_counter; ?>.</span><?= htmlspecialchars($row['komoditas']); ?></div>
+                                        <?php if(!empty($row['kelompok_komoditas'])): ?><div class="small text-muted mb-1"><?= htmlspecialchars($row['kelompok_komoditas']); ?></div><?php endif; ?>
+                                    <?php else: ?>
+                                        <div class="ps-4 text-success opacity-50 small"><i class="fas fa-level-up-alt fa-rotate-90 me-2"></i></div>
+                                    <?php endif; ?>
+                                    <div class="<?= !$show_komoditas ? 'ps-5' : ''; ?>"><span class="fw-medium text-dark"><?= htmlspecialchars($row['varietas'] ?: '-'); ?></span></div>
+                                </td>
+                                
+                                <td><?= htmlspecialchars($row['kelas_benih'] ?: '-'); ?></td>
+                                
+                                <td>
+                                    <div class="fw-bold text-dark fs-6"><?= number_format($row['jumlah_benih']) . $stok_unit; ?></div>
+                                    <div class="small text-success fw-medium">
+                                        <?= !empty($row['harga_satuan']) ? 'Rp ' . number_format($row['harga_satuan'], 0, ',', '.') . ' <span class="fw-normal text-muted">' . htmlspecialchars($harga_unit) . '</span>' : '-'; ?>
+                                    </div>
+                                </td>
+                                
+                                <td><span class="badge bg-light text-secondary border px-2 py-1 fw-medium"><?= htmlspecialchars($row['satuan'] ?: '-'); ?></span></td>
+                                
+                                <td>
+                                    <?php
+                                    // PENDETEKSI WARNA STATUS CERDAS
+                                    $status = $row['status_ketersediaan'];
+                                    $st_lower = strtolower(trim($status));
+                                    $badge_class = 'border-secondary text-secondary'; 
+                                    
+                                    if (strpos($st_lower, 'tidak') !== false) {
+                                        $badge_class = 'border-danger text-danger'; 
+                                    } elseif (strpos($st_lower, 'tersedia') !== false) {
+                                        $badge_class = 'border-success text-success'; 
+                                    } elseif (strpos($st_lower, 'pesan') !== false) {
+                                        $badge_class = 'border-info text-info-emphasis'; // Biru Muda (Dipesan)
+                                    } elseif (strpos($st_lower, 'potensi') !== false) {
+                                        $badge_class = 'border-primary text-primary'; // Biru Tua (Potensi)
+                                    } elseif (strpos($st_lower, 'batas') !== false) {
+                                        $badge_class = 'border-warning text-warning-emphasis'; 
+                                    }
+                                    ?>
+                                    <span class="badge bg-transparent border <?= $badge_class; ?> px-3 py-2 rounded-2 fw-bold" style="letter-spacing: 0.5px;">
+                                        <?= htmlspecialchars($status); ?>
+                                    </span>
+                                </td>
+                                
+                                <td>
+                                    <div class="fw-medium text-dark"><?= htmlspecialchars($row['bulan']); ?></div>
+                                    <div class="fw-bold text-muted small"><?= htmlspecialchars($row['tahun']); ?></div>
+                                </td>
+                                
+                                <td class="text-center">
+                                    <div class="d-flex flex-column gap-2 align-items-center justify-content-center">
+                                        <div class="btn-group btn-group-sm rounded-3 overflow-hidden shadow-sm" role="group">
+                                            <a href="detail_laporan.php?id=<?= $row['id_laporan']; ?>" class="btn btn-white border"><i class="fas fa-eye text-info"></i></a>
+                                            <a href="edit_laporan.php?id=<?= $row['id_laporan']; ?>" class="btn btn-white border"><i class="fas fa-edit text-primary"></i></a>
+                                            <a href="hapus_laporan.php?id=<?= $row['id_laporan']; ?>" class="btn btn-white border" onclick="konfirmasiHapus(event, this.href)"><i class="fas fa-trash text-danger"></i></a>
                                         </div>
-                                    </td>
-                                    
-                                    <td><?= htmlspecialchars($row['kelas_benih'] ?: '-'); ?></td>
-                                    
-                                    <td>
-                                        <div class="fw-bold text-dark"><?= number_format($row['jumlah_benih']); ?> <span class="fw-normal fs-6 text-muted"><?= htmlspecialchars($row['satuan']); ?></span></div>
-                                        <div class="small text-success fw-medium">
-                                            <?= !empty($row['harga_satuan']) ? 'Rp ' . number_format($row['harga_satuan'], 0, ',', '.') : '-'; ?>
-                                        </div>
-                                    </td>
-                                    
-                                    <td>
-                                        <?php
-                                        $status = $row['status_ketersediaan'];
-                                        $outline_class = 'border-secondary text-secondary'; 
-                                        if($status == 'Tersedia') $outline_class = 'border-success text-success'; 
-                                        elseif($status == 'Tidak Tersedia') $outline_class = 'border-danger text-danger'; 
-                                        elseif($status == 'Terbatas') $outline_class = 'border-warning text-warning-emphasis'; 
-                                        elseif($status == 'PO') $outline_class = 'border-primary text-primary'; 
-                                        ?>
-                                        <span class="badge bg-transparent border <?= $outline_class; ?> px-3 py-2 rounded-2 fw-bold" style="letter-spacing: 0.5px;">
-                                            <?= htmlspecialchars($status); ?>
-                                        </span>
-                                    </td>
-                                    
-                                    <td>
-                                        <div class="fw-medium text-dark"><?= htmlspecialchars($row['bulan']); ?></div>
-                                        <div class="fw-bold text-muted small"><?= htmlspecialchars($row['tahun']); ?></div>
-                                    </td>
-                                    
-                                    <td class="text-center">
-                                        <div class="d-flex flex-column gap-2 align-items-center justify-content-center">
-                                            <div class="btn-group btn-group-sm rounded-3 overflow-hidden shadow-sm" role="group">
-                                                <a href="detail_laporan.php?id=<?= $row['id_laporan']; ?>" class="btn btn-white border" title="Detail"><i class="fas fa-eye text-info"></i></a>
-                                                <a href="edit_laporan.php?id=<?= $row['id_laporan']; ?>" class="btn btn-white border" title="Edit"><i class="fas fa-edit text-primary"></i></a>
-                                                <a href="hapus_laporan.php?id=<?= $row['id_laporan']; ?>" class="btn btn-white border" title="Hapus" onclick="konfirmasiHapus(event, this.href)"><i class="fas fa-trash text-danger"></i></a>
-                                            </div>
-                                            
-                                            <?php if ($show_komoditas && !empty($row['komoditas'])): ?>
-                                                <button class="btn btn-sm btn-success text-white w-100 rounded-3 shadow-sm" style="font-size: 0.75rem; transition: all 0.2s;" onclick="addVarietyForKomoditas('<?= htmlspecialchars(addslashes($row['komoditas'])); ?>')">
-                                                    <i class="fas fa-plus me-1"></i>Varietas
-                                                </button>
-                                            <?php endif; ?>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php 
-                                endwhile; 
-                            else:
-                            ?>
-                                <tr>
-                                    <td colspan="6" class="text-center py-5 text-muted bg-white">
-                                        <i class="fas fa-folder-open fa-3x mb-3 opacity-25"></i>
-                                        <p class="mb-0 fw-bold">Belum ada riwayat laporan.</p>
-                                        <small>Data yang Anda inputkan akan muncul di sini.</small>
-                                    </td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endwhile; else: ?>
+                            <tr><td colspan="7" class="text-center py-5 text-muted bg-white"><p class="fw-bold mb-0">Belum ada riwayat laporan.</p></td></tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
                 </div>
             </div>
         </div>
@@ -343,6 +315,50 @@ function konfirmasiHapus(event, url_hapus) {
     });
 }
 </script>
+
+<div class="modal fade" id="hapusMassalModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Hapus Data Massal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form action="proses_hapus_massal.php" method="POST">
+                <div class="modal-body py-4">
+                    <div class="alert alert-danger rounded-3 small mb-4 bg-danger bg-opacity-10 border-danger border-opacity-25 text-danger">
+                        <strong>PERINGATAN:</strong> Tindakan ini akan menghapus <strong>seluruh data</strong> pada bulan dan tahun yang Anda pilih secara permanen. Data yang dihapus tidak dapat dikembalikan!
+                    </div>
+                    
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label class="form-label fw-semibold small mb-1">Pilih Bulan</label>
+                            <select class="form-select bg-light border-0" name="bulan" required>
+                                <option value="">Pilih Bulan...</option>
+                                <?php
+                                $bulans = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+                                foreach($bulans as $b) {
+                                    echo "<option value=\"$b\">$b</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold small mb-1">Tahun</label>
+                            <input type="number" class="form-control bg-light border-0" name="tahun" value="<?= date('Y') ?>" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 pt-0 pb-4 px-4 d-flex justify-content-between">
+                    <button type="button" class="btn btn-light border px-4 rounded-3" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-danger px-4 fw-bold rounded-3 shadow-sm">
+                        <i class="fas fa-trash-alt me-2"></i> Ya, Hapus Data
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <?php 
 // Notifikasi SweetAlert untuk Session Success/Error

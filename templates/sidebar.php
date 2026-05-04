@@ -1,4 +1,87 @@
 <?php if(isset($_SESSION['user_id'])): ?>
+
+<style>
+    /* --- SIKBS MODERN SIDEBAR MENU --- */
+    .sidebar-menu {
+        padding: 0 15px !important; /* Jarak aman dari tepi layar */
+        list-style: none;
+        margin-top: 15px;
+    }
+
+    .sidebar-menu li {
+        margin-bottom: 8px; /* Jarak antar menu agar tidak dempet */
+    }
+
+    .sidebar-menu a {
+        display: flex;
+        align-items: center;
+        padding: 12px 18px;
+        color: rgba(255, 255, 255, 0.7) !important; /* Abu-abu transparan elegan */
+        text-decoration: none;
+        border-radius: 12px !important; /* Kunci modern: Sudut melengkung halus */
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 0.95rem;
+    }
+
+    .sidebar-menu a i {
+        margin-right: 12px;
+        font-size: 1.15rem;
+        transition: transform 0.3s ease;
+        width: 25px;
+        text-align: center;
+    }
+
+    /* Efek Saat Kursor Diarahkan (Hover) */
+    .sidebar-menu a:hover {
+        color: #ffffff !important;
+        background-color: rgba(255, 255, 255, 0.1); /* Efek kaca tipis */
+        transform: translateX(5px); /* Animasi geser dikit ke kanan */
+    }
+
+    .sidebar-menu a:hover i {
+        transform: scale(1.15); /* Ikon membesar dikit */
+    }
+
+    /* Efek Saat Menu Sedang Dibuka (Active) */
+    .sidebar-menu a.active {
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+        color: #10b981 !important; /* Hijau Emerald */
+        font-weight: 700;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar-menu a.active i {
+        color: #10b981 !important;
+    }
+    
+    /* Judul Kategori (MENU UTAMA) */
+    .sidebar-heading-modern {
+        padding: 0 18px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: rgba(255, 255, 255, 0.5);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 12px;
+        margin-top: 25px;
+    }
+    
+    /* Perbaikan untuk Dropdown Admin agar serasi */
+    #collapseInputAdmin {
+        background-color: rgba(0,0,0,0.15);
+        border-radius: 12px;
+        margin-top: 5px;
+        padding: 5px 0;
+    }
+    #collapseInputAdmin a {
+        padding: 8px 18px;
+        font-size: 0.85rem;
+        border-radius: 8px !important;
+        margin: 0 10px 4px 10px;
+    }
+</style>
+
 <aside class="sidebar" id="appSidebar">
     
     <div class="sidebar-brand">
@@ -26,52 +109,77 @@
     <ul class="sidebar-menu">
         <li>
             <a href="../dashboard/dashboard.php" class="<?php echo ($current_page == 'dashboard') ? 'active' : ''; ?>">
-                <i class="fas fa-chart-pie text-center" style="width: 25px;"></i> Ringkasan
+                <i class="fas fa-chart-pie"></i> Ringkasan
             </a>
         </li>
         
-        <li class="px-3 pt-3 pb-2 text-white opacity-50 small fw-bold" style="letter-spacing: 1px;">MENU UTAMA</li>
+        <li class="sidebar-heading-modern">MENU UTAMA</li>
         
         <?php if($_SESSION['role'] == 'operator'): ?>
             <li>
                 <a href="../laporan/tambah_laporan.php" class="<?php echo ($current_page == 'tambah_laporan') ? 'active' : ''; ?>">
-                    <i class="fas fa-plus-circle text-center" style="width: 25px;"></i> Input Laporan
+                    <i class="fas fa-plus-circle"></i> Input Laporan
                 </a>
             </li>
             <li>
                 <a href="../laporan/riwayat_laporan.php" class="<?php echo ($current_page == 'riwayat_laporan') ? 'active' : ''; ?>">
-                    <i class="fas fa-history text-center" style="width: 25px;"></i> Riwayat Data
+                    <i class="fas fa-history"></i> Riwayat Data
                 </a>
             </li>
         <?php else: ?>
+            
+            <?php
+                // Ambil daftar balai untuk menu dropdown admin
+                $query_nav_balai = mysqli_query($conn, "SELECT id_balai, nama_balai FROM balai ORDER BY nama_balai ASC");
+            ?>
+            <li class="nav-item">
+                <a href="#" class="nav-link d-flex align-items-center <?php echo (strpos($current_page, 'tambah_laporan') !== false) ? 'active' : ''; ?>" data-bs-toggle="collapse" data-bs-target="#collapseInputAdmin" aria-expanded="false">
+                    <i class="fas fa-keyboard"></i> 
+                    <span class="ms-1">Input Data Balai</span>
+                    <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem; margin-right:0;"></i>
+                </a>
+                <div id="collapseInputAdmin" class="collapse mt-1">
+                    <ul class="list-unstyled fw-normal pb-1 small ms-4 ps-3 mt-2 mb-2" style="border-left: 1px solid rgba(255,255,255,0.2);">
+                        <?php while($nav_balai = mysqli_fetch_assoc($query_nav_balai)): ?>
+                            <li class="mb-2 mt-2">
+                                <a href="../laporan/tambah_laporan.php?balai_id=<?= $nav_balai['id_balai']; ?>" class="d-block py-1">
+                                    <i class="fas fa-angle-right me-2"></i> <?= htmlspecialchars($nav_balai['nama_balai']); ?>
+                                </a>
+                            </li>
+                        <?php endwhile; ?>
+                    </ul>
+                </div>
+            </li>
+
             <li>
                 <a href="../admin/semua_laporan.php" class="<?php echo ($current_page == 'semua_laporan') ? 'active' : ''; ?>">
-                    <i class="fas fa-folder-open text-center" style="width: 25px;"></i> Data Laporan
+                    <i class="fas fa-folder-open"></i> Data Laporan
                 </a>
             </li>
+       
             <li>
                 <a href="../admin/manajemen_user.php" class="<?php echo ($current_page == 'manajemen_user') ? 'active' : ''; ?>">
-                    <i class="fas fa-users-cog text-center" style="width: 25px;"></i> Kelola Akun
+                    <i class="fas fa-users-cog"></i> Kelola Akun
                 </a>
             </li>
             <li>
                 <a href="../admin/export.php" class="<?php echo ($current_page == 'export') ? 'active' : ''; ?>">
-                    <i class="fas fa-file-excel text-center" style="width: 25px;"></i> Export Laporan
+                    <i class="fas fa-file-excel"></i> Export Laporan
                 </a>
             </li>
         <?php endif; ?>
 
-        <li class="px-3 pt-4 pb-4">
-            <a href="#" class="text-white mt-2 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#logoutModal" style="opacity: 0.8; transition: 0.3s;">
-                <i class="fas fa-sign-out-alt text-center" style="width: 25px;"></i> Keluar Sistem
+        <li style="margin-top: 30px;">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                <i class="fas fa-sign-out-alt"></i> Keluar Sistem
             </a>
         </li>
     </ul>
 </aside>
+
 <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
         <div class="modal-content border-0 shadow-lg rounded-4">
-            
             <div class="modal-header border-0 pb-0">
                 <button type="button" class="btn-close mt-2 me-2" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -89,7 +197,6 @@
                         Ya, Keluar
                     </a>
                 </div>
-                
             </div>
         </div>
     </div>
@@ -107,7 +214,6 @@
         const overlay = document.getElementById('sidebarOverlay');
         const body = document.body;
         
-        // 1. Seting Awal Saat Halaman Dibuka
         function initSidebarState() {
             if(window.innerWidth > 991) {
                 if(localStorage.getItem('sidebarState') === 'closed') {
@@ -121,15 +227,13 @@
         }
         initSidebarState();
 
-        // 2. Logika Saat Tombol Burger Diklik
         if(toggleBtn) {
             toggleBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                e.stopPropagation(); // SANGAT PENTING: Mencegah klik tembus ke document (halaman utama)
+                e.stopPropagation();
                 
                 body.classList.toggle('sidebar-open');
                 
-                // Simpan memori jika di PC
                 if(window.innerWidth > 991) {
                     if(body.classList.contains('sidebar-open')) {
                         localStorage.setItem('sidebarState', 'open');
@@ -140,17 +244,10 @@
             });
         }
 
-        // 3. FITUR BARU: Klik Sembarang Tempat di Halaman Utama untuk Menutup Sidebar
         document.addEventListener('click', function(e) {
-            // Cek apakah sidebar sedang dalam keadaan terbuka
             if (body.classList.contains('sidebar-open')) {
-                // Pastikan area yang diklik BUKAN sidebar itu sendiri, dan BUKAN tombol burger
                 if (sidebar && !sidebar.contains(e.target) && toggleBtn && !toggleBtn.contains(e.target)) {
-                    
-                    // Tutup sidebar
                     body.classList.remove('sidebar-open');
-                    
-                    // Update memori jika di PC
                     if (window.innerWidth > 991) {
                         localStorage.setItem('sidebarState', 'closed');
                     }
@@ -158,7 +255,6 @@
             }
         });
 
-        // 4. Logika Resize (Agar tidak error saat putar layar HP / ubah ukuran browser)
         window.addEventListener('resize', function() {
             if(window.innerWidth > 991) {
                 if(localStorage.getItem('sidebarState') !== 'closed') {

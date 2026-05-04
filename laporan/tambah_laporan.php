@@ -1,26 +1,49 @@
 <?php
 session_start();
-require_once '../config/database.php';
-
+require __DIR__ . '/../config/database.php';
+global $conn;
 // Cek apakah user sudah login
 if(!isset($_SESSION['user_id'])) {
     header("Location: ../index.php");
     exit();
 }
 
-// Cek role - hanya operator yang bisa tambah laporan balainya
-if($_SESSION['role'] != 'operator') {
+// LOGIKA BARU: Izinkan Admin dan Operator
+if($_SESSION['role'] != 'operator' && $_SESSION['role'] != 'admin') {
     header("Location: ../dashboard/dashboard.php");
     exit();
 }
 
-// Ambil data user dari session
-$user_id = $_SESSION['user_id'];
-$username = $_SESSION['username'];
-$nama = $_SESSION['nama'];
-$role = $_SESSION['role'];
-$balai_id = $_SESSION['balai_id'];
-$nama_balai = $_SESSION['nama_balai'];
+// Menentukan ID Balai target berdasarkan Role
+$target_balai_id = 0;
+$target_nama_balai = '';
+$is_admin_override = false;
+
+if($_SESSION['role'] == 'admin') {
+    // Jika Admin, wajib ada balai_id di URL
+    if(!isset($_GET['balai_id'])) {
+        $_SESSION['error'] = "Silakan pilih balai terlebih dahulu dari menu sidebar.";
+        header("Location: ../admin/semua_laporan.php");
+        exit();
+    }
+    
+    $target_balai_id = (int)$_GET['balai_id'];
+    $is_admin_override = true;
+    
+    // Cari nama balai target
+    $query_b = mysqli_query($conn, "SELECT nama_balai FROM balai WHERE id_balai = $target_balai_id");
+    if(mysqli_num_rows($query_b) > 0) {
+        $b_data = mysqli_fetch_assoc($query_b);
+        $target_nama_balai = $b_data['nama_balai'];
+    } else {
+        header("Location: ../admin/semua_laporan.php");
+        exit();
+    }
+} else {
+    // Jika Operator, ambil dari session aslinya
+    $target_balai_id = $_SESSION['balai_id'];
+    $target_nama_balai = $_SESSION['nama_balai'];
+}
 
 // Helper functions untuk form validation
 function getFieldValue($field, $default = '') {
@@ -45,7 +68,6 @@ require_once '../templates/sidebar.php';
 ?>
 
 <style>
-    /* --- CSS TOMBOL MODERN --- */
     .btn-modern-cancel {
         background-color: #ffffff;
         color: #64748b;
@@ -54,29 +76,24 @@ require_once '../templates/sidebar.php';
     }
     .btn-modern-cancel:hover {
         background-color: #f8fafc;
-        color: #ef4444; /* Merah halus saat di-hover */
+        color: #ef4444; 
         border-color: #fca5a5;
         transform: translateY(-3px);
         box-shadow: 0 8px 15px rgba(239, 68, 68, 0.1);
     }
-
     .btn-modern-save {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%); /* Hijau Emerald Segar */
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
         color: white;
         border: none;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .btn-modern-save:hover {
-        transform: translateY(-3px); /* Efek melayang */
-        box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); /* Glowing shadow hijau */
+        transform: translateY(-3px); 
+        box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); 
         color: white;
     }
-    .btn-modern-save i {
-        transition: transform 0.3s ease;
-    }
-    .btn-modern-save:hover i {
-        transform: scale(1.15); /* Ikon membesar dikit */
-    }
+    .btn-modern-save i { transition: transform 0.3s ease; }
+    .btn-modern-save:hover i { transform: scale(1.15); }
 </style>
 
 <main class="bg-dashboard min-vh-100 w-100" style="background-color: #f8f9fc; padding-top: 2rem; padding-bottom: 4rem;">
@@ -89,7 +106,70 @@ require_once '../templates/sidebar.php';
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 pb-3 border-bottom">
                     <div class="mb-3 mb-md-0">
                         <h1 class="h3 fw-bolder text-dark mb-2">Tambah Laporan Baru</h1>
-                        <p class="text-secondary mb-0">Input data ketersediaan benih untuk <strong><?php echo htmlspecialchars($nama_balai); ?></strong></p>
+                        <p class="text-secondary mb-0">
+                            Input data ketersediaan benih untuk <strong><?php echo htmlspecialchars($target_nama_balai); ?></strong>
+                            <?php if($is_admin_override): ?>
+                                <span class="badge bg-warning text-dark ms-2"><i class="fas fa-crown me-1"></i> Mode Admin</span>
+                            <?php endif; ?>
+                        </p>
+                    </div>
+                    
+                    <div>
+                        <button type="button" class="btn btn-outline-success fw-bold rounded-3 shadow-sm px-4 py-2" data-bs-toggle="modal" data-bs-target="#importModal">
+                            <i class="fas fa-file-import me-2"></i> Import Excel (CSV)
+                        </button>
+                    </div>
+                    
+                </div>
+
+                <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 shadow-lg rounded-4">
+                            <div class="modal-header border-bottom-0 pb-0">
+                                <h5 class="modal-title fw-bold text-success" id="importModalLabel"><i class="fas fa-file-excel me-2"></i>Import Data Ketersediaan</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="proses_import.php" method="POST" enctype="multipart/form-data">
+                                <div class="modal-body py-4">
+                                    <input type="hidden" name="target_balai_id" value="<?php echo $target_balai_id; ?>">
+                                    
+                                    <div class="alert alert-info rounded-3 small mb-4">
+                                        <strong><i class="fas fa-info-circle me-1"></i> Aturan Import:</strong><br>
+                                        1. Pastikan file Excel sudah di-Save As ke format <strong>.csv (Comma delimited)</strong>.<br>
+                                        2. Urutan kolom harus: <i>Komoditas, Kelompok, Varietas, Kelas Benih, Jumlah, Satuan, Harga, Status(Keterangan), Deskripsi</i>.<br>
+                                        3. Jangan hapus baris pertama (Judul Kolom).
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="file_excel" class="form-label fw-semibold text-dark">Pilih File CSV</label>
+                                        <input class="form-control bg-light" type="file" id="file_excel" name="file_excel" accept=".csv" required>
+                                    </div>
+                                    
+                                    <div class="row g-2 mt-3">
+                                        <div class="col-6">
+                                            <label class="form-label fw-semibold small mb-1">Bulan Data</label>
+                                            <select class="form-select bg-light" name="bulan" required>
+                                                <option value="Auto" selected>Auto-Deteksi dari File Excel</option>
+                                                <?php
+                                                $bulans = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+                                                foreach($bulans as $b) {
+                                                    echo "<option value=\"$b\">$b</option>";
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label fw-semibold small mb-1">Tahun Data</label>
+                                            <input type="number" class="form-control bg-light" name="tahun" value="<?= date('Y') ?>" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-top-0 pt-0 pb-4 px-4 d-flex justify-content-between">
+                                    <button type="button" class="btn btn-light border px-4" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-success px-4 fw-bold"><i class="fas fa-upload me-2"></i> Mulai Import</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
 
@@ -120,6 +200,8 @@ require_once '../templates/sidebar.php';
                     </div>
                     <div class="card-body p-4 p-lg-5 pt-4">
                         <form method="POST" action="proses_tambah.php">
+                            
+                            <input type="hidden" name="target_balai_id" value="<?php echo $target_balai_id; ?>">
                             
                             <div class="row g-4">
                                 <div class="col-12 col-md-6">
@@ -220,7 +302,7 @@ require_once '../templates/sidebar.php';
                             </div>
 
                            <div class="d-flex justify-content-end gap-3 mt-5 pt-4 border-top">
-                                <a href="riwayat_laporan.php" class="btn btn-modern-cancel fw-bold rounded-3" style="padding: 12px 32px; font-size: 1rem;">
+                                <a href="<?php echo $is_admin_override ? '../admin/semua_laporan.php' : 'riwayat_laporan.php'; ?>" class="btn btn-modern-cancel fw-bold rounded-3" style="padding: 12px 32px; font-size: 1rem;">
                                     Batal
                                 </a>
                                 <button type="submit" class="btn btn-modern-save fw-bold rounded-3" style="padding: 12px 32px; font-size: 1rem;">
@@ -240,10 +322,8 @@ require_once '../templates/sidebar.php';
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     function setupCustomInput(selectElement, customInput, hiddenField, wrapperClass) {
-        // Handle dropdown change
         selectElement.addEventListener('change', function() {
             const selectedValue = this.value;
-            
             if (selectedValue === 'custom') {
                 customInput.style.display = 'block';
                 customInput.focus();
@@ -255,12 +335,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Handle custom input change
         customInput.addEventListener('input', function() {
             hiddenField.value = this.value;
         });
         
-        // Check if there's a custom value on page load
         const currentHiddenValue = hiddenField.value;
         const currentCustomValue = customInput.value;
         
@@ -280,7 +358,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Setup Kelas Benih
     const kelasBenihSelect = document.getElementById('kelas_benih_select');
     const kelasBenihCustom = document.getElementById('kelas_benih_custom');
     const kelasBenihHidden = document.getElementById('kelas_benih');
@@ -288,7 +365,6 @@ document.addEventListener('DOMContentLoaded', function() {
         setupCustomInput(kelasBenihSelect, kelasBenihCustom, kelasBenihHidden, 'kelas-benih');
     }
     
-    // Setup Satuan
     const satuanSelect = document.getElementById('satuan_select');
     const satuanCustom = document.getElementById('satuan_custom');
     const satuanHidden = document.getElementById('satuan');
@@ -296,7 +372,6 @@ document.addEventListener('DOMContentLoaded', function() {
         setupCustomInput(satuanSelect, satuanCustom, satuanHidden, 'satuan');
     }
     
-    // Setup Status Ketersediaan
     const statusSelect = document.getElementById('status_ketersediaan_select');
     const statusCustom = document.getElementById('status_ketersediaan_custom');
     const statusHidden = document.getElementById('status_ketersediaan');
@@ -307,7 +382,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php 
-// Clear session data after displaying
 unset($_SESSION['form_data']);
 unset($_SESSION['errors']);
 require_once '../templates/footer.php'; 

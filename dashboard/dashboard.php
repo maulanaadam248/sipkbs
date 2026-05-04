@@ -221,22 +221,49 @@ require_once '../templates/sidebar.php';
                                         <tr>
                                             <th>Komoditas & Varietas</th>
                                             <th>Kelas Benih</th>
-                                            <th>Jumlah Stok</th>
+                                            <th>Stok & Harga</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        // PENTING: Tambahkan 'kelas_benih' ke dalam query SQL
-                                        $query_terbaru = "SELECT komoditas, varietas, kelompok_komoditas, kelas_benih, jumlah_benih, satuan, status_ketersediaan 
-                                                          FROM laporan 
-                                                          WHERE balai_id = $balai_id 
-                                                          ORDER BY id_laporan DESC 
-                                                          LIMIT 5";
+                                        // UPDATE QUERY: Ambil semua kolom (*) agar deskripsi dan harga_satuan ikut terbaca
+                                        $query_terbaru = "SELECT * FROM laporan 
+                                                        WHERE balai_id = $balai_id 
+                                                        ORDER BY id_laporan DESC 
+                                                        LIMIT 5";
                                         $result_terbaru = mysqli_query($conn, $query_terbaru);
                                         
                                         if (mysqli_num_rows($result_terbaru) > 0):
                                             while ($row_baru = mysqli_fetch_assoc($result_terbaru)):
+                                                
+                                                // BACA METADATA SATUAN (gr & /gram) DARI DESKRIPSI
+                                                $stok_unit = ''; $harga_unit = '';
+                                                if(strpos($row_baru['deskripsi'], 'MetaUnit=[') !== false) {
+                                                    preg_match('/MetaUnit=\[([^|]+)\|([^\]]+)\]/', $row_baru['deskripsi'], $m);
+                                                    if(isset($m[1]) && $m[1] != '-') $stok_unit = ' ' . trim($m[1]);
+                                                    if(isset($m[2]) && $m[2] != '-') {
+                                                        $harga_unit = trim($m[2]);
+                                                        if(strpos($harga_unit, '/') === false) $harga_unit = '/' . $harga_unit;
+                                                    }
+                                                }
+                                                
+                                                // LOGIKA WARNA STATUS CERDAS
+                                                $status = $row_baru['status_ketersediaan'];
+                                                $st_lower = strtolower(trim($status));
+                                                $outline_class = 'border-secondary text-secondary'; 
+                                                
+                                                if (strpos($st_lower, 'tidak') !== false) {
+                                                    $outline_class = 'border-danger text-danger'; 
+                                                } elseif (strpos($st_lower, 'tersedia') !== false) {
+                                                    $outline_class = 'border-success text-success'; 
+                                                } elseif (strpos($st_lower, 'pesan') !== false) {
+                                                    $outline_class = 'border-info text-info-emphasis'; // Biru Muda
+                                                } elseif (strpos($st_lower, 'potensi') !== false) {
+                                                    $outline_class = 'border-primary text-primary'; // Biru Tua
+                                                } elseif (strpos($st_lower, 'batas') !== false) {
+                                                    $outline_class = 'border-warning text-warning-emphasis'; // Oranye
+                                                }
                                         ?>
                                         <tr>
                                             <td>
@@ -259,19 +286,16 @@ require_once '../templates/sidebar.php';
                                             </td>
 
                                             <td>
-                                                <span class="fw-bold text-dark fs-6"><?= number_format($row_baru['jumlah_benih']); ?></span> 
-                                                <span class="text-secondary fw-medium small"><?= htmlspecialchars($row_baru['satuan']); ?></span>
+                                                <div class="fw-bold text-dark fs-6">
+                                                    <?= number_format($row_baru['jumlah_benih']) . $stok_unit; ?> 
+                                                    <span class="badge bg-light text-secondary border px-2 ms-1 fw-medium" style="font-size:0.7rem;"><?= htmlspecialchars($row_baru['satuan']); ?></span>
+                                                </div>
+                                                <div class="small text-success fw-medium mt-1">
+                                                    <?= !empty($row_baru['harga_satuan']) ? 'Rp ' . number_format($row_baru['harga_satuan'], 0, ',', '.') . ' <span class="fw-normal text-muted">' . htmlspecialchars($harga_unit) . '</span>' : '-'; ?>
+                                                </div>
                                             </td>
                                             
                                             <td>
-                                                <?php
-                                                $status = $row_baru['status_ketersediaan'];
-                                                $outline_class = 'border-secondary text-secondary'; 
-                                                if($status == 'Tersedia') $outline_class = 'border-success text-success'; 
-                                                elseif($status == 'Tidak Tersedia') $outline_class = 'border-danger text-danger'; 
-                                                elseif($status == 'Terbatas') $outline_class = 'border-warning text-warning-emphasis'; 
-                                                elseif($status == 'PO') $outline_class = 'border-primary text-primary'; 
-                                                ?>
                                                 <span class="badge bg-transparent border <?= $outline_class; ?> px-3 py-2 rounded-2 fw-bold" style="letter-spacing: 0.5px;">
                                                     <?= htmlspecialchars($status); ?>
                                                 </span>

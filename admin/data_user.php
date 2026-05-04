@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../config/database.php';
-
+global $conn;
 // Cek apakah user sudah login
 if(!isset($_SESSION['user_id'])) {
     header("Location: ../index.php");

@@ -1,6 +1,7 @@
 <?php
 session_start();
-require_once '../../../config/database.php';
+require __DIR__ . '/../config/database.php';
+global $conn;
 
 // Fungsi untuk menentukan Ikon dan Warna berdasarkan Komoditas
 if (!function_exists('getKomoditasIcon')) {

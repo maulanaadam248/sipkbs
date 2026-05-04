@@ -1,23 +1,19 @@
-<section id="home" class="vh-100 d-flex align-items-center position-relative overflow-hidden" 
-         style="background: url('assets/img/landing2.png') no-repeat center center / cover;">
+<section id="home" class="vh-100 d-flex align-items-start position-relative overflow-hidden" 
+         style="background: url('assets/img/landing3.png') no-repeat center center / cover;">
     
     <div class="position-absolute top-0 start-0 w-100 h-100" 
-         style="background: linear-gradient(to right, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 45%, rgba(0,0,0,0) 60%);">
+         style="background: radial-gradient(circle at top left, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 20%, rgba(0,0,0,0) 45%); pointer-events: none;">
     </div>
 
-    <div class="container position-relative z-3 py-2 fade-in">
-        <div class="row align-items-center">
+    <div class="container position-relative z-3 pt-5 mt-5 fade-in">
+        <div class="row">
             
             <div class="col-lg-8 col-xl-7 text-start">
                 
-                <h1 class="display-3 fw-bolder text-white mb-4" style="letter-spacing: -1px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5);">
+                <h1 class="display-3 fw-bolder text-white mb-4" style="letter-spacing: -1px; text-shadow: 2px 2px 10px rgba(0,0,0,0.7);">
                     Sistem Informasi <br> Ketersediaan Benih Sumber
-                </h1>
-                
-                <p class="lead text-white mb-5" style="max-width: 600px; font-size: 1.25rem; text-shadow: 1px 1px 5px rgba(0,0,0,0.5);">
-                    Platform digital terpadu untuk monitoring dan manajemen ketersediaan benih pertanian unggul di seluruh penjuru Nusantara.
-                </p>
-                
+                </h1>        
+                     
                 <div class="d-flex justify-content-start gap-3 flex-wrap">
                     <a href="#statistics" class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold">
                         <i class="fas fa-chart-line me-2"></i> Lihat Statistik
@@ -28,8 +24,6 @@
                 </div>
 
             </div>
-            
-            <div class="col-lg-4 col-xl-5"></div>
             
         </div>
     </div>

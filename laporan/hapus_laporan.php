@@ -1,59 +1,55 @@
 <?php
 session_start();
-require_once '../config/database.php';
-
-// Enable error reporting
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Cek apakah user sudah login
+require __DIR__ . '/../config/database.php';
+global $conn;
+// 1. Cek apakah user sudah login
 if(!isset($_SESSION['user_id'])) {
     header("Location: ../index.php");
     exit();
 }
 
-// Cek role - hanya operator yang bisa hapus laporan
-if($_SESSION['role'] != 'operator') {
+// 2. BUKA GEMBOK: Izinkan Admin DAN Operator masuk
+if($_SESSION['role'] != 'admin' && $_SESSION['role'] != 'operator') {
     header("Location: ../dashboard/dashboard.php");
     exit();
 }
 
-// Ambil ID laporan dari URL
-$id_laporan = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+// Tentukan arah kembali (redirect) setelah menghapus
+$redirect = ($_SESSION['role'] == 'admin') ? "../admin/semua_laporan.php" : "riwayat_laporan.php";
 
-if($id_laporan == 0) {
-    $_SESSION['error'] = "ID laporan tidak valid!";
-    header("Location: riwayat_laporan.php");
+// 3. Pastikan ada ID yang dikirim
+if(!isset($_GET['id'])) {
+    $_SESSION['error'] = "Pilih data yang ingin dihapus!";
+    header("Location: $redirect");
     exit();
 }
 
-// Cek apakah laporan ada dan milik user ini
-$query = "SELECT * FROM laporan WHERE id_laporan = ? AND balai_id = ?";
-$stmt = mysqli_prepare($conn, $query);
-mysqli_stmt_bind_param($stmt, "ii", $id_laporan, $_SESSION['balai_id']);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
+$laporan_id = $_GET['id'];
 
-if(mysqli_num_rows($result) == 0) {
-    $_SESSION['error'] = "Laporan tidak ditemukan!";
-    header("Location: riwayat_laporan.php");
-    exit();
-}
-
-// Ambil data laporan untuk hapus foto
-$laporan = mysqli_fetch_assoc($result);
-
-// Hapus laporan dari database
-$delete_query = "DELETE FROM laporan WHERE id_laporan = ? AND balai_id = ?";
-$delete_stmt = mysqli_prepare($conn, $delete_query);
-mysqli_stmt_bind_param($delete_stmt, "ii", $id_laporan, $_SESSION['balai_id']);
-
-if(mysqli_stmt_execute($delete_stmt)) {
-    $_SESSION['success'] = "Laporan berhasil dihapus!";
+// 4. LOGIKA KEAMANAN PENGHAPUSAN (Mencegah Operator menghapus data balai lain)
+if($_SESSION['role'] == 'admin') {
+    // Admin bisa menghapus data apa saja
+    $query = "DELETE FROM laporan WHERE id_laporan = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $laporan_id);
 } else {
-    $_SESSION['error'] = "Gagal menghapus laporan: " . mysqli_error($conn);
+    $balai_id_operator = $_SESSION['balai_id'];
+    $query = "DELETE FROM laporan WHERE id_laporan = ? AND balai_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "ii", $laporan_id, $balai_id_operator);
 }
 
-header("Location: riwayat_laporan.php");
+if(mysqli_stmt_execute($stmt)) {
+    if(mysqli_stmt_affected_rows($stmt) > 0) {
+        $_SESSION['success'] = "Data laporan berhasil dihapus permanen!";
+    } else {
+        // Jika tidak ada baris yang terhapus (mungkin ID tidak ada, atau Operator mencoba hapus data balai lain)
+        $_SESSION['error'] = "Data tidak ditemukan atau Anda tidak berhak menghapus data ini.";
+    }
+} else {
+    $_SESSION['error'] = "Gagal menghapus data: " . mysqli_error($conn);
+}
+
+header("Location: $redirect");
 exit();
 ?>

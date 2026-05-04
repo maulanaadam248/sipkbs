@@ -3,7 +3,7 @@ session_start();
 // Mundur 3 folder ke root
 require_once '../../../config/database.php';
 
-// Fungsi sinkronisasi warna Balai (Ditambahkan di sini agar bisa dipanggil)
+// Fungsi sinkronisasi warna Balai
 if (!function_exists('getBalaiColor')) {
     function getBalaiColor($nama_balai) {
         $balai = strtoupper($nama_balai);
@@ -77,6 +77,25 @@ require_once '../../../templates/header.php';
         color: #334155 !important;
         vertical-align: middle !important;
     }
+
+    /* Pastikan pembungkus tabel memiliki tinggi atau batas */
+    .table-responsive {
+        max-height: 80vh; /* Tabel akan mengisi 80% tinggi layar sebelum muncul scrollbar internal */
+        overflow-y: auto;
+        border-radius: 12px;
+    }
+
+    .table-green-theme thead th {
+        /* Ini adalah kuncinya */
+        position: sticky !important;
+        top: 0; /* Menempel tepat di paling atas container */
+        z-index: 10; /* Angka 10 memastikan dia di atas baris data (z-index 1) */
+        
+        /* Warna latar harus solid agar data di bawahnya tidak tembus pandang saat di-scroll */
+        background-color: #d1fae5 !important; 
+        color: #065f46 !important;
+        box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1); /* Efek bayangan tipis agar terlihat terpisah */
+    }
 </style>
 
 <main class="bg-dashboard min-vh-100 py-5 w-100" style="background-color: #f8f9fc;">
@@ -126,7 +145,7 @@ require_once '../../../templates/header.php';
                                 <th width="12%">Balai</th>
                                 <th width="20%">Komoditas (Varietas)</th>
                                 <th width="12%">Kelas</th>
-                                <th width="15%">Stok & Harga</th>
+                                <th width="20%">Stok & Harga</th>
                                 <th width="12%">Status</th>
                                 <th width="14%">Periode</th>
                                 <th class="text-center" width="10%">Aksi</th>
@@ -148,12 +167,33 @@ require_once '../../../templates/header.php';
                                     // AMBIL WARNA BALAI SECARA DINAMIS
                                     $warna_balai_tabel = getBalaiColor($row['nama_balai']);
                                     
+                                    // BACA METADATA SATUAN (gr & /gram) DARI DESKRIPSI
+                                    $stok_unit = ''; $harga_unit = '';
+                                    if(strpos($row['deskripsi'], 'MetaUnit=[') !== false) {
+                                        preg_match('/MetaUnit=\[([^|]+)\|([^\]]+)\]/', $row['deskripsi'], $m);
+                                        if(isset($m[1]) && $m[1] != '-') $stok_unit = ' ' . trim($m[1]);
+                                        if(isset($m[2]) && $m[2] != '-') {
+                                            $harga_unit = trim($m[2]);
+                                            if(strpos($harga_unit, '/') === false) $harga_unit = '/' . $harga_unit;
+                                        }
+                                    }
+                                    
+                                    // LOGIKA WARNA STATUS CERDAS
                                     $status = $row['status_ketersediaan'];
-                                    $badge = 'border-secondary text-secondary'; 
-                                    if(strtolower(trim($status)) == 'tersedia') $badge = 'border-success text-success'; 
-                                    elseif(strtolower(trim($status)) == 'tidak tersedia') $badge = 'border-danger text-danger'; 
-                                    elseif(strtolower(trim($status)) == 'terbatas') $badge = 'border-warning text-warning-emphasis'; 
-                                    elseif(strtolower(trim($status)) == 'po') $badge = 'border-primary text-primary'; 
+                                    $st_lower = strtolower(trim($status));
+                                    $badge_class = 'border-secondary text-secondary'; 
+                                    
+                                    if (strpos($st_lower, 'tidak') !== false) {
+                                        $badge_class = 'border-danger text-danger'; 
+                                    } elseif (strpos($st_lower, 'tersedia') !== false) {
+                                        $badge_class = 'border-success text-success'; 
+                                    } elseif (strpos($st_lower, 'pesan') !== false) {
+                                        $badge_class = 'border-info text-info-emphasis'; // Biru Muda
+                                    } elseif (strpos($st_lower, 'potensi') !== false) {
+                                        $badge_class = 'border-primary text-primary'; // Biru Tua
+                                    } elseif (strpos($st_lower, 'batas') !== false) {
+                                        $badge_class = 'border-warning text-warning-emphasis'; // Oranye
+                                    }
                             ?>
                                 <tr>
                                     <td class="text-center fw-bold text-muted"><?= $no++; ?></td>
@@ -168,16 +208,30 @@ require_once '../../../templates/header.php';
                                         <div class="fw-bold text-success"><?= htmlspecialchars($row['komoditas']); ?></div>
                                         <div class="small text-muted"><?= htmlspecialchars($row['kelompok_komoditas'] ?: '-'); ?> | <em><?= htmlspecialchars($row['varietas'] ?: '-'); ?></em></div>
                                     </td>
+                                    
                                     <td><?= htmlspecialchars($row['kelas_benih'] ?: '-'); ?></td>
+                                    
                                     <td>
-                                        <div class="fw-bold text-dark"><?= number_format($row['jumlah_benih']); ?> <span class="small fw-normal"><?= htmlspecialchars($row['satuan']); ?></span></div>
-                                        <div class="small text-success fw-medium"><?= !empty($row['harga_satuan']) ? 'Rp ' . number_format($row['harga_satuan'], 0, ',', '.') : '-'; ?></div>
+                                        <div class="fw-bold text-dark fs-6">
+                                            <?= number_format($row['jumlah_benih']) . $stok_unit; ?> 
+                                            <span class="badge bg-light text-secondary border px-2 ms-1 fw-medium" style="font-size:0.7rem;"><?= htmlspecialchars($row['satuan']); ?></span>
+                                        </div>
+                                        <div class="small text-success fw-medium">
+                                            <?= !empty($row['harga_satuan']) ? 'Rp ' . number_format($row['harga_satuan'], 0, ',', '.') . ' <span class="fw-normal text-muted">' . htmlspecialchars($harga_unit) . '</span>' : '-'; ?>
+                                        </div>
                                     </td>
-                                    <td><span class="badge bg-transparent border <?= $badge; ?> px-2 py-1 rounded-2 fw-bold" style="font-size: 0.75rem;"><?= strtoupper(htmlspecialchars($status)); ?></span></td>
+                                    
+                                    <td>
+                                        <span class="badge bg-transparent border <?= $badge_class; ?> px-2 py-1 rounded-2 fw-bold" style="font-size: 0.75rem;">
+                                            <?= htmlspecialchars($status); ?>
+                                        </span>
+                                    </td>
+                                    
                                     <td>
                                         <div class="fw-medium text-dark"><?= htmlspecialchars($row['bulan']); ?></div>
                                         <div class="small text-muted fw-bold"><?= htmlspecialchars($row['tahun']); ?></div>
                                     </td>
+                                    
                                     <td class="text-center">
                                         <a href="detail_publik.php?id=<?= $row['id_laporan']; ?>" class="btn btn-outline-info btn-sm rounded-3 px-3 shadow-sm">
                                             <i class="fas fa-eye me-1"></i> Detail

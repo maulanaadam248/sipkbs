@@ -7,9 +7,9 @@
             </span>
             <h2 class="fw-bold text-dark mb-3" style="font-size: 2.5rem;">Layanan UPBS</h2>
             <p class="text-muted mx-auto" style="max-width: 1180px; font-size: 1.1rem;">
-                Benih sumber adalah tanaman atau bagiannya yang digunakan untuk memproduksi benih. Benih sumber menempati posisi strategis dalam industri perbenihan nasional karena menjadi sumber bagi benih yang ditanam oleh petani di Indonesia. 
+                Benih sumber adalah tanaman atau bagiannya yang digunakan untuk memproduksi benih. Benih sumber menempati posisi strategis dalam industri perbenihan nasional karena menjadi sumber benih yang akan ditanam oleh petani di Indonesia. 
                 Penyediaan benih sumber dapat disesuaikan dengan permintaan atau kebutuhan konsumen, baik pemerintah daerah, perusahaan, maupun masyarakat. Melalui Permentan Nomor 2 Tahun 2025, 
-                dinyatakan bahwa salah satu tugas dari Pusat Perakitan dan Modernisasi Pertanian Perkebunan adalah pelaksanaan tugas di bidang produksi benih sumber. Tugas tersebut dilaksanakan melalui Unit Pengelola Benih Sumber (UPBS) di masing-masing Balai Pengujian dan Perakitan lingkungan BRMP Perkebunan.
+                dinyatakan bahwa salah satu tugas dari Pusat Perakitan dan Modernisasi Pertanian Perkebunan adalah pelaksanaan tugas di bidang produksi benih sumber. Tugas tersebut dilaksanakan melalui Unit Pengelola Benih Sumber (UPBS) di masing-masing Balai Pengujian dan Perakitan di lingkup BRMP Perkebunan.
             </p>
         </div>
 
@@ -25,7 +25,7 @@
                                 UPBS BRMP PALMA
                             </a>
                         </h5>
-                        <p class="text-muted small mb-4" style="line-height: 1.6;">Bertugas memproduksi dan menyalurkan benih sumber dengan komoditas mandat tanaman palma (kelapa, pinang, gewang, kurma, nipah, aren, lontar, sawit, dan sagu).</p>
+                        <p class="text-muted small mb-4" style="line-height: 1.6;">Bertugas memproduksi dan menyalurkan benih sumber dengan komoditas mandat tanaman palma.</p>
                     </div>
                 </div>
             </div>
