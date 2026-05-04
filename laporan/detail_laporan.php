@@ -4,61 +4,65 @@ session_start();
 require __DIR__ . '/../config/database.php';
 global $conn;
 
-// FUNGSI BARU: MENGAMBIL NAMA FILE GAMBAR BUKAN IKON
-if (!function_exists('getKomoditasImage')) {
-    function getKomoditasImage($nama_komoditas) {
+// FUNGSI HYBRID SEMPURNA: MENGAMBIL GAMBAR ATAU IKON DEFAULT
+if (!function_exists('getKomoditasMedia')) {
+    function getKomoditasMedia($nama_komoditas) {
         $k = strtolower(trim($nama_komoditas));
 
-        // Gambar default jika komoditas tidak dikenali
-        $image = 'default.png'; 
+        // DEFAULT: Jika komoditas tidak dikenali (seperti ABAKA), gunakan IKON DAUN
+        $type = 'icon'; 
+        $media = 'fa-seedling'; 
         $color = '#16a34a';
         $bg = 'rgba(22, 163, 74, 0.1)';
 
-        // Cocokkan nama komoditas dengan nama file gambar Anda
+        // Jika dikenali, ganti TIPE menjadi GAMBAR
         if (strpos($k, 'kakao') !== false) {
-            $image = 'kakao.png'; $color = '#78350f'; $bg = 'rgba(120, 53, 15, 0.1)';
+            $type = 'image'; $media = 'kakao-removebg-preview.png'; $color = '#78350f'; $bg = 'rgba(120, 53, 15, 0.1)';
         } elseif (strpos($k, 'kopi') !== false) {
-            $image = 'kopi.jpeg'; $color = '#451a03'; $bg = 'rgba(69, 26, 3, 0.1)'; 
+            $type = 'image'; $media = 'kopi-removebg-preview.png'; $color = '#451a03'; $bg = 'rgba(69, 26, 3, 0.1)'; 
         } elseif (strpos($k, 'kelapa') !== false) {
-            $image = 'kelapa.jpeg'; $color = '#047857'; $bg = 'rgba(4, 120, 87, 0.1)'; 
+            $type = 'image'; $media = 'kelapa-removebg-preview.png'; $color = '#047857'; $bg = 'rgba(4, 120, 87, 0.1)'; 
         } elseif (strpos($k, 'tembakau') !== false) {
-            $image = 'tembakau.jpeg'; $color = '#65a30d'; $bg = 'rgba(101, 163, 13, 0.1)'; 
+            $type = 'image'; $media = 'tembakau-removebg-preview.png'; $color = '#c3aa1a'; $bg = 'rgba(101, 163, 13, 0.1)'; 
         } elseif (strpos($k, 'kapas') !== false) {
-            $image = 'kapas.jpeg'; $color = '#0ea5e9'; $bg = 'rgba(14, 165, 233, 0.1)'; 
+            $type = 'image'; $media = 'kapas-removebg-preview.png'; $color = '#0ea5e9'; $bg = 'rgba(14, 165, 233, 0.1)'; 
         } elseif (strpos($k, 'lada') !== false) {
-            $image = 'lada.jpeg'; $color = '#064e3b'; $bg = 'rgba(6, 78, 59, 0.1)'; 
+            $type = 'image'; $media = 'lada-removebg-preview.png'; $color = '#064e3b'; $bg = 'rgba(6, 78, 59, 0.1)'; 
         } elseif (strpos($k, 'vanili') !== false) {
-            $image = 'vanili.jpeg'; $color = '#0d9488'; $bg = 'rgba(13, 148, 136, 0.1)'; 
+            $type = 'image'; $media = 'vanili-removebg-preview.png'; $color = '#0d9488'; $bg = 'rgba(13, 148, 136, 0.1)'; 
         } elseif (strpos($k, 'nilam') !== false) {
-            $image = 'nilam.jpeg'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
+            $type = 'image'; $media = 'nilam-removebg-preview.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
         } elseif (strpos($k, 'wijen') !== false) {
-            $image = 'wijen.jpeg'; $color = '#d97706'; $bg = 'rgba(217, 119, 6, 0.1)'; 
+            $type = 'image'; $media = 'wijen-removebg-preview.png'; $color = '#06d95e'; $bg = 'rgba(217, 119, 6, 0.1)'; 
         } elseif (strpos($k, 'rosella') !== false) {
-            $image = 'rosela.jpeg'; $color = '#be123c'; $bg = 'rgba(190, 18, 60, 0.1)';
+            $type = 'image'; $media = 'rosela-removebg-preview.png'; $color = '#be123c'; $bg = 'rgba(190, 18, 60, 0.1)';
         } elseif (strpos($k, 'jarak') !== false) {
-            $image = 'jarak.png'; $color = '#4d7c0f'; $bg = 'rgba(77, 124, 15, 0.1)'; 
+            $type = 'image'; $media = 'jarakkepyar-removebg-preview.png'; $color = '#4d7c0f'; $bg = 'rgba(77, 124, 15, 0.1)'; 
+        } elseif (strpos($k, 'kenaf') !== false) {
+            $type = 'image'; $media = 'kenaf-removebg-preview.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
+        } elseif (strpos($k, 'rami') !== false) {
+            $type = 'image'; $media = 'rami-removebg-preview.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
+        } elseif (strpos($k, 'tebu') !== false) {
+            $type = 'image'; $media = 'tebu (2).png'; $color = '#9dcf12'; $bg = 'rgba(21, 128, 61, 0.1)';
         }
 
-        return ['image' => $image, 'color' => $color, 'bg' => $bg];
+        // Return array lengkap termasuk tipe (image/icon)
+        return ['type' => $type, 'media' => $media, 'color' => $color, 'bg' => $bg];
     }
 }    
 
-// 1. Cek apakah user sudah login
 if(!isset($_SESSION['user_id'])) {
     header("Location: ../index.php");
     exit();
 }
 
-// 2. BUKA GEMBOK: Izinkan Admin DAN Operator masuk
 if($_SESSION['role'] != 'admin' && $_SESSION['role'] != 'operator') {
     header("Location: ../dashboard/dashboard.php");
     exit();
 }
 
-// Tentukan URL kembali berdasarkan role
 $url_kembali = ($_SESSION['role'] == 'admin') ? "../admin/semua_laporan.php" : "riwayat_laporan.php";
 
-// Ambil data laporan berdasarkan ID
 if(!isset($_GET['id'])) {
     header("Location: $url_kembali");
     exit();
@@ -66,7 +70,6 @@ if(!isset($_GET['id'])) {
 
 $laporan_id = $_GET['id'];
 
-// Keamanan Tambahan: Operator hanya bisa buka ID milik balainya sendiri
 if($_SESSION['role'] == 'admin') {
     $query = "SELECT l.*, b.nama_balai FROM laporan l JOIN balai b ON l.balai_id = b.id_balai WHERE l.id_laporan = ?";
     $stmt = mysqli_prepare($conn, $query);
@@ -89,12 +92,10 @@ if(mysqli_num_rows($result) == 0) {
 
 $laporan = mysqli_fetch_assoc($result);
 
-// Panggil fungsi styling gambar komoditas
-$styleTanaman = getKomoditasImage($laporan['komoditas']); 
+// Panggil fungsi Hybrid yang sudah dibenarkan
+$styleTanaman = getKomoditasMedia($laporan['komoditas']); 
 
-// ========================================================
-// PEMBERSIHAN METAUNIT (Mencegah Sandi MetaUnit Bocor di UI)
-// ========================================================
+// PEMBERSIHAN METAUNIT
 $deskripsi_bersih = $laporan['deskripsi'];
 $stok_unit = ''; $harga_unit = '';
 
@@ -105,11 +106,9 @@ if(strpos($deskripsi_bersih, 'MetaUnit=[') !== false) {
         $harga_unit = trim($m[2]);
         if(strpos($harga_unit, '/') === false) $harga_unit = '/' . $harga_unit;
     }
-    // Hapus string MetaUnit dari deskripsi menggunakan Regex
     $deskripsi_bersih = preg_replace('/MetaUnit=\[[^\]]+\]/', '', $deskripsi_bersih);
     $deskripsi_bersih = trim($deskripsi_bersih);
 }
-// ========================================================
 
 $page_title = "Detail Laporan";
 $current_page = 'semua_laporan';
@@ -119,14 +118,12 @@ require_once '../templates/sidebar.php';
 ?>
 
 <style>
-    /* 1. LAYOUT KARTU DETAIL */
     .detail-card { border-radius: 20px; overflow: hidden; }
     .detail-label { color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 4px; }
     .detail-value { color: #1e293b; font-weight: 700; font-size: 1.1rem; }
     .info-box { background-color: #f8fafc; border: 1px solid #f1f5f9; border-radius: 12px; padding: 1.5rem; transition: all 0.3s ease; }
     .info-box:hover { background-color: #ffffff; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-color: #10b981; }
 
-    /* 2. TOMBOL MODERN */
     .btn-modern-action { padding: 12px 28px !important; font-size: 0.95rem !important; border-radius: 10px !important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; font-weight: 700 !important; text-decoration: none !important; }
     .btn-back-modern { background-color: #ffffff !important; color: #64748b !important; border: 2px solid #e2e8f0 !important; }
     .btn-back-modern:hover { background-color: #f8fafc !important; color: #1e293b !important; border-color: #94a3b8 !important; transform: translateY(-3px) !important; }
@@ -134,16 +131,9 @@ require_once '../templates/sidebar.php';
     .btn-edit-modern:hover { transform: translateY(-3px) !important; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3) !important; color: white !important; }
     .btn-modern-action:active { transform: translateY(2px) scale(0.95) !important; box-shadow: inset 0 3px 5px rgba(0,0,0,0.1) !important; transition: all 0.1s !important; }
 
-    /* 4. STATUS BADGE */
     .status-badge-lg { padding: 10px 20px; font-size: 0.9rem; border-radius: 8px; font-weight: 700; letter-spacing: 0.5px; }
     
-    /* GAYA UNTUK GAMBAR AVATAR */
-    .komoditas-avatar {
-        width: 80px; 
-        height: 80px;
-        padding: 10px; 
-        object-fit: contain; 
-    }
+    .komoditas-avatar { width: 80px; height: 80px; padding: 10px; object-fit: contain; }
 </style>
 
 <main class="bg-dashboard min-vh-100 py-4 w-100" style="background-color: #f8f9fc;">
@@ -176,13 +166,18 @@ require_once '../templates/sidebar.php';
                 <div class="row align-items-center mb-5">
                     
                     <div class="col-md-auto mb-3 mb-md-0">
-                        <!-- INI BAGIAN YANG DIPERBAIKI: Menggunakan IMG bukan ICON -->
                         <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm overflow-hidden border border-2" 
-                             style="width: 85px; height: 85px; background-color: <?php echo $styleTanaman['bg']; ?>; border-color: <?php echo $styleTanaman['color']; ?> !important;">
-                            <img src="../assets/img/komoditas/<?php echo $styleTanaman['image']; ?>" 
-                                 alt="<?php echo htmlspecialchars($laporan['komoditas']); ?>" 
-                                 class="komoditas-avatar"
-                                 onerror="this.onerror=null; this.src='../assets/img/komoditas/default.png';">
+                             style="width: 85px; height: 85px; background-color: <?= $styleTanaman['bg']; ?>; border-color: <?= $styleTanaman['color']; ?> !important; color: <?= $styleTanaman['color']; ?>;">
+                            
+                            <!-- LOGIKA HYBRID Bekerja di sini -->
+                            <?php if($styleTanaman['type'] == 'image'): ?>
+                                <img src="../assets/img/komoditas/<?= $styleTanaman['media']; ?>" 
+                                     alt="<?= htmlspecialchars($laporan['komoditas']); ?>" 
+                                     class="komoditas-avatar">
+                            <?php else: ?>
+                                <i class="fas <?= $styleTanaman['media']; ?> fa-3x"></i>
+                            <?php endif; ?>
+                            
                         </div>
                     </div>
                     
@@ -192,7 +187,6 @@ require_once '../templates/sidebar.php';
                     </div>
                     <div class="col-md-auto text-md-end">
                         <?php
-                            // SMART SCANNER UNTUK WARNA STATUS BADGE
                             $status = $laporan['status_ketersediaan'];
                             $st_lower = strtolower(trim($status));
                             $badge_class = 'bg-secondary text-white'; 
@@ -241,17 +235,15 @@ require_once '../templates/sidebar.php';
                     <div class="col-md-6 col-lg-4">
                         <div class="info-box h-100 border-start border-primary border-4">
                             <div class="detail-label text-primary"><i class="fas fa-boxes me-2"></i>Jumlah Stok</div>
-                            <!-- INI BAGIAN YANG DIPERBAIKI: Menggabungkan nilai stok dengan $stok_unit -->
-                            <div class="detail-value fs-3"><?php echo number_format($laporan['jumlah_benih']) . $stok_unit; ?> <span class="fs-6 fw-normal text-muted"><?php echo htmlspecialchars($laporan['satuan']); ?></span></div>
+                            <div class="detail-value fs-3"><?= number_format($laporan['jumlah_benih']) . $stok_unit; ?> <span class="fs-6 fw-normal text-muted"><?= htmlspecialchars($laporan['satuan']); ?></span></div>
                         </div>
                     </div>
 
                     <div class="col-md-6 col-lg-4">
                         <div class="info-box h-100 border-start border-success border-4">
                             <div class="detail-label text-success"><i class="fas fa-tag me-2"></i>Harga Satuan</div>
-                            <!-- INI BAGIAN YANG DIPERBAIKI: Menggabungkan harga dengan $harga_unit -->
                             <div class="detail-value fs-3">
-                                <?php echo !empty($laporan['harga_satuan']) ? 'Rp ' . number_format($laporan['harga_satuan'], 0, ',', '.') . ' <span class="fs-6 fw-normal text-muted">' . htmlspecialchars($harga_unit) . '</span>' : '-'; ?>
+                                <?= !empty($laporan['harga_satuan']) ? 'Rp ' . number_format($laporan['harga_satuan'], 0, ',', '.') . ' <span class="fs-6 fw-normal text-muted">' . htmlspecialchars($harga_unit) . '</span>' : '-'; ?>
                             </div>
                         </div>
                     </div>
@@ -267,7 +259,6 @@ require_once '../templates/sidebar.php';
                         <div class="info-box" style="background-color: #fff; border-style: dashed; border-width: 2px;">
                             <div class="detail-label mb-3"><i class="fas fa-align-left me-2"></i>Deskripsi Tambahan</div>
                             <div class="text-secondary lh-lg">
-                                <!-- INI BAGIAN YANG DIPERBAIKI: Memanggil $deskripsi_bersih agar MetaUnit hilang -->
                                 <?= nl2br(htmlspecialchars($deskripsi_bersih ?: 'Tidak ada deskripsi tambahan untuk data ini.')); ?>
                             </div>
                         </div>

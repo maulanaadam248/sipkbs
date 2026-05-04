@@ -1,43 +1,51 @@
 <?php
 session_start();
-require __DIR__ . '/../config/database.php';
+require __DIR__ . '/../../../config/database.php';
 global $conn;
 
-// Fungsi untuk menentukan Ikon dan Warna berdasarkan Komoditas
-if (!function_exists('getKomoditasIcon')) {
-    function getKomoditasIcon($nama_komoditas) {
+// FUNGSI HYBRID SEMPURNA: Menentukan mau pakai Gambar atau Ikon
+if (!function_exists('getKomoditasMedia')) {
+    function getKomoditasMedia($nama_komoditas) {
         $k = strtolower(trim($nama_komoditas));
-        
-        // Default (Jika tidak terdaftar, pakai Tunas Daun Hijau standar)
-        $icon = 'fa-seedling';
-        $color = '#16a34a'; // Hijau teks
-        $bg = 'rgba(22, 163, 74, 0.1)'; // Hijau background transparan
 
+        // DEFAULT: Jika komoditas tidak dikenali (seperti ABAKA), gunakan IKON DAUN
+        $type = 'icon'; 
+        $media = 'fa-seedling'; 
+        $color = '#16a34a';
+        $bg = 'rgba(22, 163, 74, 0.1)';
+
+        // Jika dikenali, ganti TIPE menjadi GAMBAR
         if (strpos($k, 'kakao') !== false) {
-            $icon = 'fa-leaf'; $color = '#78350f'; $bg = 'rgba(120, 53, 15, 0.1)'; // Coklat Kakao
+            $type = 'image'; $media = 'kakao-removebg-preview.png'; $color = '#78350f'; $bg = 'rgba(120, 53, 15, 0.1)';
         } elseif (strpos($k, 'kopi') !== false) {
-            $icon = 'fa-egg'; $color = '#451a03'; $bg = 'rgba(69, 26, 3, 0.1)'; // Biji Kopi Utuh (Oval)
+            $type = 'image'; $media = 'kopi-removebg-preview.png'; $color = '#451a03'; $bg = 'rgba(69, 26, 3, 0.1)'; 
         } elseif (strpos($k, 'kelapa') !== false) {
-            $icon = 'fa-seedling'; $color = '#047857'; $bg = 'rgba(4, 120, 87, 0.1)'; // Hijau Tunas Kelapa
+            $type = 'image'; $media = 'kelapa-removebg-preview.png'; $color = '#047857'; $bg = 'rgba(4, 120, 87, 0.1)'; 
         } elseif (strpos($k, 'tembakau') !== false) {
-            $icon = 'fa-leaf'; $color = '#65a30d'; $bg = 'rgba(101, 163, 13, 0.1)'; // Hijau Kekuningan Tembakau
+            $type = 'image'; $media = 'tembakau-removebg-preview.png'; $color = '#c3aa1a'; $bg = 'rgba(101, 163, 13, 0.1)'; 
         } elseif (strpos($k, 'kapas') !== false) {
-            $icon = 'fa-spa'; $color = '#0ea5e9'; $bg = 'rgba(14, 165, 233, 0.1)'; // Bunga Mekar Kapas (Biru Langit Lembut)
+            $type = 'image'; $media = 'kapas-removebg-preview.png'; $color = '#0ea5e9'; $bg = 'rgba(14, 165, 233, 0.1)'; 
         } elseif (strpos($k, 'lada') !== false) {
-            $icon = 'fa-leaf'; $color = '#064e3b'; $bg = 'rgba(6, 78, 59, 0.1)'; // Hijau Gelap Daun Lada
+            $type = 'image'; $media = 'lada-removebg-preview.png'; $color = '#064e3b'; $bg = 'rgba(6, 78, 59, 0.1)'; 
         } elseif (strpos($k, 'vanili') !== false) {
-            $icon = 'fa-leaf'; $color = '#0d9488'; $bg = 'rgba(13, 148, 136, 0.1)'; // Hijau Teal Eksotis
+            $type = 'image'; $media = 'vanili-removebg-preview.png'; $color = '#0d9488'; $bg = 'rgba(13, 148, 136, 0.1)'; 
         } elseif (strpos($k, 'nilam') !== false) {
-            $icon = 'fa-leaf'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)'; // Hijau Daun Pekat
+            $type = 'image'; $media = 'nilam-removebg-preview.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
         } elseif (strpos($k, 'wijen') !== false) {
-            $icon = 'fa-seedling'; $color = '#d97706'; $bg = 'rgba(217, 119, 6, 0.1)'; // Oranye Kecoklatan Wijen
+            $type = 'image'; $media = 'wijen-removebg-preview.png'; $color = '#06d95e'; $bg = 'rgba(217, 119, 6, 0.1)'; 
         } elseif (strpos($k, 'rosella') !== false) {
-            $icon = 'fa-spa'; $color = '#be123c'; $bg = 'rgba(190, 18, 60, 0.1)'; // Bunga Merah/Pink Rosella
+            $type = 'image'; $media = 'rosela-removebg-preview.png'; $color = '#be123c'; $bg = 'rgba(190, 18, 60, 0.1)';
         } elseif (strpos($k, 'jarak') !== false) {
-            $icon = 'fa-seedling'; $color = '#4d7c0f'; $bg = 'rgba(77, 124, 15, 0.1)'; // Hijau Zaitun
+            $type = 'image'; $media = 'jarakkepyar-removebg-preview.png'; $color = '#4d7c0f'; $bg = 'rgba(77, 124, 15, 0.1)'; 
+        } elseif (strpos($k, 'kenaf') !== false) {
+            $type = 'image'; $media = 'kenaf-removebg-preview.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
+        } elseif (strpos($k, 'rami') !== false) {
+            $type = 'image'; $media = 'rami-removebg-preview.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
+        } elseif (strpos($k, 'tebu') !== false) {
+            $type = 'image'; $media = 'tebu (2).png'; $color = '#9dcf12'; $bg = 'rgba(21, 128, 61, 0.1)';
         }
 
-        return ['icon' => $icon, 'color' => $color, 'bg' => $bg];
+        return ['type' => $type, 'media' => $media, 'color' => $color, 'bg' => $bg];
     }
 }
 
@@ -63,8 +71,27 @@ if(mysqli_num_rows($result) == 0) {
 
 $laporan = mysqli_fetch_assoc($result);
 
-// Panggil fungsi untuk mendapatkan styling icon & warnanya
-$styleTanaman = getKomoditasIcon($laporan['komoditas']);
+// Panggil fungsi Hybrid
+$styleTanaman = getKomoditasMedia($laporan['komoditas']);
+
+// ========================================================
+// PEMBERSIHAN METAUNIT (Mencegah Sandi MetaUnit Bocor di UI)
+// ========================================================
+$deskripsi_bersih = $laporan['deskripsi'];
+$stok_unit = ''; $harga_unit = '';
+
+if(strpos($deskripsi_bersih, 'MetaUnit=[') !== false) {
+    preg_match('/MetaUnit=\[([^|]+)\|([^\]]+)\]/', $deskripsi_bersih, $m);
+    if(isset($m[1]) && $m[1] != '-') $stok_unit = ' ' . trim($m[1]);
+    if(isset($m[2]) && $m[2] != '-') {
+        $harga_unit = trim($m[2]);
+        if(strpos($harga_unit, '/') === false) $harga_unit = '/' . $harga_unit;
+    }
+    // Hapus string MetaUnit dari deskripsi menggunakan Regex
+    $deskripsi_bersih = preg_replace('/MetaUnit=\[[^\]]+\]/', '', $deskripsi_bersih);
+    $deskripsi_bersih = trim($deskripsi_bersih);
+}
+// ========================================================
 
 $page_title = "Detail Ketersediaan Benih";
 require_once '../../../templates/header.php';
@@ -138,6 +165,14 @@ require_once '../../../templates/header.php';
         font-weight: 700;
         letter-spacing: 0.5px;
     }
+    
+    /* GAYA UNTUK GAMBAR AVATAR */
+    .komoditas-avatar {
+        width: 80px; 
+        height: 80px;
+        padding: 10px; 
+        object-fit: contain; 
+    }
 </style>
 
 <main class="bg-dashboard min-vh-100 py-5 w-100" style="background-color: #f8f9fc;">
@@ -147,15 +182,15 @@ require_once '../../../templates/header.php';
             <div class="mb-3 mb-md-0">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-1">
-                        <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-muted">Beranda</a></li>
+                        <li class="breadcrumb-item"><a href="../../../index.php" class="text-decoration-none text-muted">Beranda</a></li>
                         <li class="breadcrumb-item active fw-bold text-success" aria-current="page">Detail Data</li>
                     </ol>
                 </nav>
                 <h2 class="h3 mb-0 text-gray-800 fw-bold">Informasi Ketersediaan Benih</h2>
             </div>
             <div class="d-flex gap-3 mb-4">
-                <a href="../../../index.php" class="btn-modern-action btn-back-modern shadow-sm">
-                    <i class="fas fa-arrow-left me-2"></i> Kembali ke Beranda
+                <a href="semua_laporan_publik.php" class="btn-modern-action btn-back-modern shadow-sm">
+                    <i class="fas fa-arrow-left me-2"></i> Kembali
                 </a>
             </div>
         </div>
@@ -165,24 +200,47 @@ require_once '../../../templates/header.php';
             
             <div class="card-body p-4 p-lg-5">
                 <div class="row align-items-center mb-5">
+                    
                     <div class="col-md-auto mb-3 mb-md-0">
-                        <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" 
-                             style="width: 80px; height: 80px; background-color: <?= $styleTanaman['bg']; ?>; color: <?= $styleTanaman['color']; ?>;">
-                            <i class="fas <?= $styleTanaman['icon']; ?> fa-3x"></i>
+                        <!-- LINGKARAN AVATAR HYBRID -->
+                        <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm overflow-hidden border border-2" 
+                             style="width: 85px; height: 85px; background-color: <?php echo $styleTanaman['bg']; ?>; border-color: <?php echo $styleTanaman['color']; ?> !important; color: <?php echo $styleTanaman['color']; ?>;">
+                            
+                            <!-- LOGIKA HYBRID Bekerja di sini -->
+                            <?php if($styleTanaman['type'] == 'image'): ?>
+                                <img src="../../../assets/img/komoditas/<?php echo $styleTanaman['media']; ?>" 
+                                     alt="<?php echo htmlspecialchars($laporan['komoditas']); ?>" 
+                                     class="komoditas-avatar"
+                                     onerror="this.onerror=null; this.outerHTML='<i class=\'fas fa-seedling fa-3x\'></i>';">
+                            <?php else: ?>
+                                <i class="fas <?php echo $styleTanaman['media']; ?> fa-3x"></i>
+                            <?php endif; ?>
+                            
                         </div>
                     </div>
+                    
                     <div class="col-md">
                         <h3 class="fw-bolder text-dark mb-1"><?= htmlspecialchars($laporan['komoditas']); ?></h3>
                         <p class="text-muted mb-0 fs-5">Varietas: <span class="text-dark fw-bold"><?= htmlspecialchars($laporan['varietas'] ?: '-'); ?></span></p>
                     </div>
                     <div class="col-md-auto text-md-end">
                         <?php
+                            // SMART SCANNER UNTUK WARNA STATUS BADGE
                             $status = $laporan['status_ketersediaan'];
-                            $badge_class = 'bg-secondary text-white';
-                            if($status == 'Tersedia') $badge_class = 'bg-success text-white';
-                            elseif($status == 'PO') $badge_class = 'bg-primary text-white';
-                            elseif($status == 'Terbatas') $badge_class = 'bg-warning text-dark';
-                            elseif($status == 'Tidak Tersedia') $badge_class = 'bg-danger text-white';
+                            $st_lower = strtolower(trim($status));
+                            $badge_class = 'bg-secondary text-white'; 
+                            
+                            if (strpos($st_lower, 'tidak') !== false) {
+                                $badge_class = 'bg-danger text-white'; 
+                            } elseif (strpos($st_lower, 'tersedia') !== false) {
+                                $badge_class = 'bg-success text-white'; 
+                            } elseif (strpos($st_lower, 'pesan') !== false) {
+                                $badge_class = 'bg-info text-dark'; 
+                            } elseif (strpos($st_lower, 'potensi') !== false) {
+                                $badge_class = 'bg-primary text-white'; 
+                            } elseif (strpos($st_lower, 'batas') !== false) {
+                                $badge_class = 'bg-warning text-dark'; 
+                            }
                         ?>
                         <div class="detail-label mb-2">Status Saat Ini</div>
                         <span class="badge <?= $badge_class; ?> status-badge-lg shadow-sm">
@@ -216,14 +274,16 @@ require_once '../../../templates/header.php';
                     <div class="col-md-6 col-lg-4">
                         <div class="info-box h-100 border-start border-primary border-4">
                             <div class="detail-label text-primary"><i class="fas fa-boxes me-2"></i>Jumlah Stok</div>
-                            <div class="detail-value fs-3"><?= number_format($laporan['jumlah_benih']); ?> <span class="fs-6 fw-normal text-muted"><?= htmlspecialchars($laporan['satuan']); ?></span></div>
+                            <div class="detail-value fs-3"><?php echo number_format($laporan['jumlah_benih']) . $stok_unit; ?> <span class="fs-6 fw-normal text-muted"><?php echo htmlspecialchars($laporan['satuan']); ?></span></div>
                         </div>
                     </div>
 
                     <div class="col-md-6 col-lg-4">
                         <div class="info-box h-100 border-start border-success border-4">
                             <div class="detail-label text-success"><i class="fas fa-tag me-2"></i>Harga Satuan</div>
-                            <div class="detail-value fs-3"><?= !empty($laporan['harga_satuan']) ? 'Rp ' . number_format($laporan['harga_satuan'], 0, ',', '.') : '-'; ?></div>
+                            <div class="detail-value fs-3">
+                                <?php echo !empty($laporan['harga_satuan']) ? 'Rp ' . number_format($laporan['harga_satuan'], 0, ',', '.') . ' <span class="fs-6 fw-normal text-muted">' . htmlspecialchars($harga_unit) . '</span>' : '-'; ?>
+                            </div>
                         </div>
                     </div>
 
@@ -238,7 +298,7 @@ require_once '../../../templates/header.php';
                         <div class="info-box" style="background-color: #fff; border-style: dashed; border-width: 2px;">
                             <div class="detail-label mb-3"><i class="fas fa-align-left me-2"></i>Deskripsi Tambahan</div>
                             <div class="text-secondary lh-lg">
-                                <?= nl2br(htmlspecialchars($laporan['deskripsi'] ?: 'Tidak ada deskripsi tambahan untuk data ini.')); ?>
+                                <?= nl2br(htmlspecialchars($deskripsi_bersih ?: 'Tidak ada deskripsi tambahan untuk data ini.')); ?>
                             </div>
                         </div>
                     </div>
@@ -253,6 +313,4 @@ require_once '../../../templates/header.php';
     </div>
 </main>
 
-<?php 
-require_once '../../../templates/footer.php';
-?>
+<?php require_once '../../../templates/footer.php'; ?>
