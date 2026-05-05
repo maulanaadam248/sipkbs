@@ -44,6 +44,8 @@ if (!function_exists('getKomoditasMedia')) {
             $type = 'image'; $media = 'rami-removebg-preview.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
         } elseif (strpos($k, 'tebu') !== false) {
             $type = 'image'; $media = 'tebu (2).png'; $color = '#9dcf12'; $bg = 'rgba(21, 128, 61, 0.1)';
+        } elseif (strpos($k, 'abaka') !== false) {
+            $type = 'image'; $media = 'abaka-removebg-preview.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
         }
 
         // Return array lengkap termasuk tipe (image/icon)
