@@ -1,7 +1,6 @@
 <?php
 require_once 'config/database.php';
 
-// 1. KUMPULAN QUERY DATABASE
 $query_total = "SELECT COUNT(*) as total FROM laporan";
 $total_laporan = mysqli_fetch_assoc(mysqli_query($conn, $query_total))['total'];
 
@@ -10,7 +9,6 @@ $query_balai = "SELECT b.nama_balai, COUNT(l.id_laporan) as jumlah
                 GROUP BY b.id_balai, b.nama_balai ORDER BY jumlah DESC";
 $result_balai_stats = mysqli_query($conn, $query_balai);
 
-// Query Komoditas sudah di-JOIN dengan Balai
 $query_komoditas = "SELECT l.komoditas, b.nama_balai, COUNT(l.id_laporan) as jumlah 
                     FROM laporan l 
                     JOIN balai b ON l.balai_id = b.id_balai 
@@ -27,7 +25,9 @@ $result_status = mysqli_query($conn, $query_status);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIPKBS - Sistem Informasi Ketersediaan Benih</title>
+    <title>SIKBS - Sistem Informasi Ketersediaan Benih</title>
+    
+    <link rel="icon" href="assets/img/logo.png" type="image/png">
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -38,7 +38,6 @@ $result_status = mysqli_query($conn, $query_status);
 <body>
 
     <?php 
-    // Memanggil komponen (menggunakan folder dashboard sesuai strukturmu)
     include 'dashboard/components/landing/navbar.php';
     include 'dashboard/components/landing/hero.php';
     include 'dashboard/components/landing/statistik.php';
@@ -50,7 +49,6 @@ $result_status = mysqli_query($conn, $query_status);
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Efek Navbar & Animasi
         window.addEventListener('scroll', () => {
             const nav = document.querySelector('.navbar-custom');
             if(nav) window.scrollY > 50 ? nav.classList.add('scrolled') : nav.classList.remove('scrolled');
@@ -61,10 +59,8 @@ $result_status = mysqli_query($conn, $query_status);
         }, { threshold: 0.1 });
         document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
         
-        // 1. Grafik Balai (Warna tersinkronisasi)
         const balaiLabels = <?php 
             $b_labels = []; $b_values = []; $b_colors = [];
-            // Anti-Error: Cek apakah data ada sebelum diproses
             if($result_balai_stats && mysqli_num_rows($result_balai_stats) > 0) {
                 mysqli_data_seek($result_balai_stats, 0);
                 while($r = mysqli_fetch_assoc($result_balai_stats)) {
@@ -99,7 +95,6 @@ $result_status = mysqli_query($conn, $query_status);
             });
         }
 
-        // 2. Grafik Status
         const statusCanvas = document.getElementById('statusChart');
         if (statusCanvas) {
             new Chart(statusCanvas, {
