@@ -71,6 +71,10 @@ require_once '../templates/sidebar.php';
         font-weight: 700 !important;
         letter-spacing: 0.3px !important;
         vertical-align: middle !important;
+        position: sticky !important;
+        top: 0; 
+        z-index: 10; 
+        box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1); 
     }
 
     .table-green-theme tbody tr {
@@ -93,24 +97,12 @@ require_once '../templates/sidebar.php';
         color: #334155 !important;
         vertical-align: middle !important;
     }
-    /* Pastikan pembungkus tabel memiliki tinggi atau batas */
-.table-responsive {
-    max-height: 80vh; /* Tabel akan mengisi 80% tinggi layar sebelum muncul scrollbar internal */
-    overflow-y: auto;
-    border-radius: 12px;
-}
 
-.table-green-theme thead th {
-    /* Ini adalah kuncinya */
-    position: sticky !important;
-    top: 0; /* Menempel tepat di paling atas container */
-    z-index: 10; /* Angka 10 memastikan dia di atas baris data (z-index 1) */
-    
-    /* Warna latar harus solid agar data di bawahnya tidak tembus pandang saat di-scroll */
-    background-color: #d1fae5 !important; 
-    color: #065f46 !important;
-    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1); /* Efek bayangan tipis agar terlihat terpisah */
-}
+    .table-responsive {
+        max-height: 80vh; 
+        overflow-y: auto;
+        border-radius: 12px;
+    }
 </style>
 
 <main class="main-content">
@@ -221,6 +213,8 @@ require_once '../templates/sidebar.php';
                                 <th>Komoditas (Varietas)</th>
                                 <th>Kelas Benih</th>
                                 <th>Stok & Harga</th>
+                                <th>Distribusi</th>
+                                <th>Lokasi</th>
                                 <th>Satuan</th>
                                 <th>Status</th>
                                 <th>Periode</th>
@@ -244,7 +238,7 @@ require_once '../templates/sidebar.php';
                                 while($laporan = mysqli_fetch_assoc($result)):
                                     $warna_balai_tabel = getBalaiColor($laporan['nama_balai']);
                                     
-                                    // BACA METADATA SATUAN (gr & /gram) DARI DESKRIPSI
+                                    // BACA METADATA SATUAN DARI DESKRIPSI
                                     $stok_unit = ''; $harga_unit = '';
                                     if(strpos($laporan['deskripsi'], 'MetaUnit=[') !== false) {
                                         preg_match('/MetaUnit=\[([^|]+)\|([^\]]+)\]/', $laporan['deskripsi'], $m);
@@ -270,12 +264,21 @@ require_once '../templates/sidebar.php';
                                             <?= !empty($laporan['harga_satuan']) ? 'Rp ' . number_format($laporan['harga_satuan'], 0, ',', '.') . ' <span class="fw-normal text-muted">' . htmlspecialchars($harga_unit) . '</span>' : '-'; ?>
                                         </div>
                                     </td>
+
+                                    <td>
+                                        <div class="fw-bold" style="color: #d97706;">
+                                            <?= number_format((int)($laporan['volume_penyaluran'] ?? 0)) . $stok_unit; ?>
+                                        </div>
+                                    </td>
+                                    
+                                    <td>
+                                        <div class="small text-muted fw-medium"><?= htmlspecialchars($laporan['lokasi_distribusi'] ?: '-'); ?></div>
+                                    </td>
                                     
                                     <td><span class="badge bg-light text-secondary border px-2 py-1 fw-medium"><?= htmlspecialchars($laporan['satuan'] ?: '-'); ?></span></td>
                                     
                                     <td>
                                         <?php
-                                        // PENDETEKSI WARNA STATUS CERDAS
                                         $status = $laporan['status_ketersediaan'];
                                         $st_lower = strtolower($status);
                                         $badge_class = 'border-secondary text-secondary'; 
@@ -285,9 +288,9 @@ require_once '../templates/sidebar.php';
                                         } elseif (strpos($st_lower, 'tersedia') !== false) {
                                             $badge_class = 'border-success text-success'; 
                                         } elseif (strpos($st_lower, 'pesan') !== false) {
-                                            $badge_class = 'border-info text-info-emphasis'; // Biru Muda untuk Dipesan
+                                            $badge_class = 'border-info text-info-emphasis'; 
                                         } elseif (strpos($st_lower, 'potensi') !== false) {
-                                            $badge_class = 'border-primary text-primary'; // Biru Tua untuk Potensi
+                                            $badge_class = 'border-primary text-primary'; 
                                         } elseif (strpos($st_lower, 'batas') !== false) {
                                             $badge_class = 'border-warning text-warning-emphasis'; 
                                         }
@@ -296,10 +299,12 @@ require_once '../templates/sidebar.php';
                                             <?= htmlspecialchars($status); ?>
                                         </span>
                                     </td>
+                                    
                                     <td>
                                         <div class="fw-medium text-dark"><?= htmlspecialchars($laporan['bulan']); ?></div>
                                         <div class="small text-muted fw-bold"><?= htmlspecialchars($laporan['tahun']); ?></div>
                                     </td>
+                                    
                                     <td class="text-center">
                                         <div class="btn-group btn-group-sm rounded-3 overflow-hidden shadow-sm" role="group">
                                             <a href="../laporan/detail_laporan.php?id=<?= $laporan['id_laporan']; ?>" class="btn btn-white border"><i class="fas fa-eye text-info"></i></a>
@@ -309,7 +314,7 @@ require_once '../templates/sidebar.php';
                                     </td>
                                 </tr>
                             <?php endwhile; else: ?>
-                                <tr><td colspan="9" class="text-center py-5 text-muted bg-white"><p class="fw-bold mb-0">Oops! Data tidak ditemukan.</p></td></tr>
+                                <tr><td colspan="11" class="text-center py-5 text-muted bg-white"><p class="fw-bold mb-0">Oops! Data tidak ditemukan.</p></td></tr>
                             <?php endif; ?>
                         </tbody>
                     </table>

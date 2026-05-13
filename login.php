@@ -85,9 +85,9 @@ require_once 'templates/header.php';
         <div class="mb-5">
             <div class="icon-box mb-3" style="width: 80px; height: 80px; border-radius: 20px;">
                 <i class="fas fa-seedling fa-2x"></i> </div>
-            <h1 class="display-5 fw-bolder text-dark mb-2" style="letter-spacing: -1px;">SIPKBS</h1>
+            <h1 class="display-5 fw-bolder text-dark mb-2" style="letter-spacing: -1px;">SIKBS</h1>
             <p class="text-secondary fw-normal mx-auto" style="max-width: 500px; font-size: 1.1rem;">
-                Sistem Informasi Pelaporan Ketersediaan Benih Sumber
+                Sistem Informasi Ketersediaan Benih Sumber
             </p>
         </div>
 

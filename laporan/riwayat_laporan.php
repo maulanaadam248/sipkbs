@@ -190,6 +190,8 @@ require_once '../templates/sidebar.php';
                             <th>Komoditas (Varietas)</th>
                             <th>Kelas Benih</th>
                             <th>Stok & Harga</th>
+                            <th>Distribusi</th>
+                            <th>Lokasi Distribusi</th>
                             <th>Satuan</th>
                             <th>Status Ketersediaan</th>
                             <th>Periode</th>
@@ -235,6 +237,16 @@ require_once '../templates/sidebar.php';
                                         <?= !empty($row['harga_satuan']) ? 'Rp ' . number_format($row['harga_satuan'], 0, ',', '.') . ' <span class="fw-normal text-muted">' . htmlspecialchars($harga_unit) . '</span>' : '-'; ?>
                                     </div>
                                 </td>
+
+                                <td>
+                                    <div class="fw-bold" style="color: #d97706;">
+                                        <?= number_format((int)($row['volume_penyaluran'] ?? 0)) . $stok_unit; ?>
+                                    </div>
+                                </td>
+                                
+                                <td>
+                                    <div class="small text-muted fw-medium"><?= htmlspecialchars($row['lokasi_distribusi'] ?? '-'); ?></div>
+                                </td>
                                 
                                 <td><span class="badge bg-light text-secondary border px-2 py-1 fw-medium"><?= htmlspecialchars($row['satuan'] ?: '-'); ?></span></td>
                                 
@@ -278,7 +290,7 @@ require_once '../templates/sidebar.php';
                                 </td>
                             </tr>
                         <?php endwhile; else: ?>
-                            <tr><td colspan="7" class="text-center py-5 text-muted bg-white"><p class="fw-bold mb-0">Belum ada riwayat laporan.</p></td></tr>
+                            <tr><td colspan="9" class="text-center py-5 text-muted bg-white"><p class="fw-bold mb-0">Belum ada riwayat laporan.</p></td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>

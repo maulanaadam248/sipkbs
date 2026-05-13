@@ -103,7 +103,7 @@ require_once '../templates/header.php';
                     <i class="fas fa-building fa-2x"></i>
                 </div>
                 <h2 class="h4 fw-bold text-dark mb-1"><?php echo htmlspecialchars($balai['nama_balai']); ?></h2>
-                <p class="text-muted small">Autentikasi Dasbor SIPKBS</p>
+                <p class="text-muted small">Autentikasi Dasbor SIKBS</p>
             </div>
 
             <?php if(isset($error)): ?>

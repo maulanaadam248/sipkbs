@@ -53,7 +53,7 @@
                                 UPBS BRMP TAS
                             </a>
                         </h5>
-                        <p class="text-muted small mb-4" style="line-height: 1.6;">Bertugas memproduksi dan menyalurkan benih sumber dengan komoditas mandat tanaman pemanis, tanaman serat, tembakau, dan tanaman minyak industri.</p>
+                        <p class="text-muted small mb-4" style="line-height: 1.6;">Bertugas memproduksi dan menyalurkan benih sumber dengan komoditas mandat tanaman pemanis, tanaman serat,dan tembakau.</p>
                     </div>
                 </div>
             </div>
