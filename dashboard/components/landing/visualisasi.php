@@ -150,23 +150,29 @@ $result_komoditas = mysqli_query($conn, $query_komoditas);
                             </thead>
                             <tbody>
                                 <?php 
-                                // 1. LOGIKA RESET TANGGAL 20
+                                // 1. LOGIKA RESET TANGGAL 20 (DIPERBARUI SINKRON DENGAN PUBLIK)
                                 $hari_ini = (int)date('d');
+                                
                                 if ($hari_ini >= 20) {
-                                    $tgl_mulai = date('Y-m-20 00:00:00'); // Tanggal 20 bulan ini
+                                    // Jika hari ini tgl 20 ke atas, tampilkan data mulai dari tgl 1 bulan ini
+                                    $tgl_mulai = date('Y-m-01 00:00:00'); 
                                 } else {
-                                    $tgl_mulai = date('Y-m-20 00:00:00', strtotime('-1 month')); // Tanggal 20 bulan lalu
+                                    // Jika hari ini di bawah tgl 20, tampilkan data mulai dari tgl 1 bulan lalu
+                                    $tgl_mulai = date('Y-m-01 00:00:00', strtotime('first day of last month')); 
                                 }
 
                                 // 2. Terapkan filter ke Query (hanya tampilkan >= tanggal mulai)
-                                // DIBATASI HANYA 5 DATA TERBARU
+                                // DIBATASI HANYA 5 DATA TERBARU BERDASARKAN BULAN & TAHUN AKTUAL
                                 $query_semua = "SELECT l.*, b.nama_balai 
                                                 FROM laporan l 
                                                 JOIN balai b ON l.balai_id = b.id_balai 
                                                 WHERE l.created_at >= '$tgl_mulai'
-                                                ORDER BY l.id_laporan DESC 
+                                                ORDER BY 
+                                                    l.tahun DESC, 
+                                                    FIELD(l.bulan, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember') DESC,
+                                                    l.id_laporan DESC 
                                                 LIMIT 5";
-                                                
+                                                                
                                 $result_semua = mysqli_query($conn, $query_semua);
                                 $no = 1;
 
@@ -176,7 +182,7 @@ $result_komoditas = mysqli_query($conn, $query_komoditas);
                                         // AMBIL WARNA BALAI SECARA DINAMIS
                                         $warna_balai_tabel = getBalaiColor($row['nama_balai']);
                                         
-                                        // LOGIKA BADGE TABEL DINAMIS (SAMA SEPERTI QUERY ATAS)
+                                        // LOGIKA BADGE TABEL DINAMIS
                                         $status = $row['status_ketersediaan'];
                                         $st_lower = strtolower(trim($status));
                                         $badge_class = 'border-secondary text-secondary'; 

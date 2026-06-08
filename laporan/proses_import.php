@@ -31,7 +31,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file_excel'])) {
             $bulan_terdeteksi = ''; $tahun_terdeteksi = '';
 
             // --- PERBAIKAN: NILAI DEFAULT VARIABEL BULAN & TAHUN ---
-            // Antisipasi jika file CSV benar-benar kosong, variabel ini tetap punya nilai
             $db_bulan = ($bulan_import === 'Auto' || empty($bulan_import)) ? date('F') : $bulan_import;
             $db_tahun = empty($tahun_import) ? date('Y') : $tahun_import;
             // -------------------------------------------------------
@@ -106,21 +105,21 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file_excel'])) {
                 $harga = (int)preg_replace('/[^0-9]/', '', $harga_mentah); 
                 $teks_harga = trim(preg_replace('/[0-9\s\.,]/', '', str_ireplace('rp', '', $harga_mentah))); 
                 
-                // === SCANNER KETERANGAN MURNI (DARI KANAN KE KIRI) ===
-                $status_mentah = '';
-                for ($i = 11; $i >= 8; $i--) { 
-                    $val_cek = trim($row[$i] ?? '');
-                    if (!empty($val_cek) && stripos($val_cek, 'Rp') === false && !preg_match('/^[0-9.,]+$/', str_replace(' ', '', $val_cek))) {
-                        $status_mentah = $val_cek;
-                        break;
-                    }
-                }
+                // === EKSTRAKSI KOLOM BARU (Distribusi & Lokasi) ===
+                $raw_vol_distribusi = trim($row[9] ?? '0');
+                $volume_penyaluran = (int)preg_replace('/[^0-9]/', '', $raw_vol_distribusi); // Tarik angkanya saja
                 
+                $lokasi_mentah = trim($row[10] ?? '');
+                $lokasi_distribusi = mysqli_real_escape_string($conn, $lokasi_mentah);
+                // ==================================================
+
+                // === BACA STATUS / KETERANGAN SECARA PASTI ===
+                $status_mentah = trim($row[11] ?? '');
                 if (empty($status_mentah)) { $status_mentah = '-'; }
                 
                 $final_status = ($status_mentah === '-') ? '-' : ucwords(strtolower($status_mentah));
                 $status = mysqli_real_escape_string($conn, $final_status);
-                // ===================================================
+                // =============================================
 
                 $meta_stok = !empty($teks_stok) ? $teks_stok : '-';
                 $meta_harga = !empty($teks_harga) ? $teks_harga : '-';
@@ -134,25 +133,27 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file_excel'])) {
                     $final_tahun = $tahun_import;
                 }
                 
-                // Timpa nilai default tadi dengan nilai aktual dari dalam Excel
                 $db_bulan = mysqli_real_escape_string($conn, $final_bulan);
                 $db_tahun = mysqli_real_escape_string($conn, $final_tahun);
 
+                // Tambahkan data baru ke array insert
                 $data_siap_insert[] = [
                     'balai_id' => $current_balai_id, 'komoditas' => $komoditas, 'kelompok' => $kelompok, 
                     'varietas' => $varietas_db, 'kelas' => $kelas, 'jumlah' => $jumlah, 'satuan' => $satuan, 
-                    'harga' => $harga, 'status' => $status, 'bulan' => $db_bulan, 'tahun' => $db_tahun, 'deskripsi' => $deskripsi_db
+                    'harga' => $harga, 'status' => $status, 'bulan' => $db_bulan, 'tahun' => $db_tahun, 
+                    'deskripsi' => $deskripsi_db, 'volume_penyaluran' => $volume_penyaluran, 'lokasi_distribusi' => $lokasi_distribusi
                 ];
             }
             fclose($reader);
 
             $data_siap_insert = array_reverse($data_siap_insert);
 
+            // === UPDATE QUERY INSERT AGAR MENANGKAP KOLOM BARU ===
             foreach ($data_siap_insert as $d) {
                 $query = "INSERT INTO laporan 
-                          (balai_id, komoditas, kelompok_komoditas, varietas, kelas_benih, jumlah_benih, satuan, harga_satuan, status_ketersediaan, bulan, tahun, deskripsi) 
+                          (balai_id, komoditas, kelompok_komoditas, varietas, kelas_benih, jumlah_benih, satuan, harga_satuan, status_ketersediaan, bulan, tahun, deskripsi, volume_penyaluran, lokasi_distribusi) 
                           VALUES 
-                          ({$d['balai_id']}, '{$d['komoditas']}', '{$d['kelompok']}', '{$d['varietas']}', '{$d['kelas']}', {$d['jumlah']}, '{$d['satuan']}', {$d['harga']}, '{$d['status']}', '{$d['bulan']}', '{$d['tahun']}', '{$d['deskripsi']}')";
+                          ({$d['balai_id']}, '{$d['komoditas']}', '{$d['kelompok']}', '{$d['varietas']}', '{$d['kelas']}', {$d['jumlah']}, '{$d['satuan']}', {$d['harga']}, '{$d['status']}', '{$d['bulan']}', '{$d['tahun']}', '{$d['deskripsi']}', {$d['volume_penyaluran']}, '{$d['lokasi_distribusi']}')";
                 if(mysqli_query($conn, $query)) $berhasil++; else $gagal++;
             }
             

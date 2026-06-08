@@ -2,6 +2,54 @@
 session_start();
 require_once '../config/database.php';
 
+// FUNGSI HYBRID SEMPURNA: MENGAMBIL GAMBAR ATAU IKON DEFAULT
+if (!function_exists('getKomoditasMedia')) {
+    function getKomoditasMedia($nama_komoditas) {
+        $k = strtolower(trim($nama_komoditas));
+
+        // DEFAULT: Jika komoditas tidak dikenali (seperti ABAKA), gunakan IKON DAUN
+        $type = 'icon'; 
+        $media = 'fa-seedling'; 
+        $color = '#16a34a';
+        $bg = 'rgba(22, 163, 74, 0.1)';
+
+        // Jika dikenali, ganti TIPE menjadi GAMBAR
+        if (strpos($k, 'kakao') !== false) {
+            $type = 'image'; $media = 'kakao.png'; $color = '#78350f'; $bg = 'rgba(120, 53, 15, 0.1)';
+        } elseif (strpos($k, 'kopi') !== false) {
+            $type = 'image'; $media = 'kopi.png'; $color = '#451a03'; $bg = 'rgba(69, 26, 3, 0.1)'; 
+        } elseif (strpos($k, 'kelapa') !== false) {
+            $type = 'image'; $media = 'kelapa.png'; $color = '#047857'; $bg = 'rgba(4, 120, 87, 0.1)'; 
+        } elseif (strpos($k, 'tembakau') !== false) {
+            $type = 'image'; $media = 'tembakau.png'; $color = '#c3aa1a'; $bg = 'rgba(101, 163, 13, 0.1)'; 
+        } elseif (strpos($k, 'kapas') !== false) {
+            $type = 'image'; $media = 'kapas.png'; $color = '#0ea5e9'; $bg = 'rgba(14, 165, 233, 0.1)'; 
+        } elseif (strpos($k, 'lada') !== false) {
+            $type = 'image'; $media = 'lada.png'; $color = '#064e3b'; $bg = 'rgba(6, 78, 59, 0.1)'; 
+        } elseif (strpos($k, 'vanili') !== false) {
+            $type = 'image'; $media = 'vanili.png'; $color = '#0d9488'; $bg = 'rgba(13, 148, 136, 0.1)'; 
+        } elseif (strpos($k, 'nilam') !== false) {
+            $type = 'image'; $media = 'nilam.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
+        } elseif (strpos($k, 'wijen') !== false) {
+            $type = 'image'; $media = 'wijen.png'; $color = '#06d95e'; $bg = 'rgba(217, 119, 6, 0.1)'; 
+        } elseif (strpos($k, 'rosella') !== false) {
+            $type = 'image'; $media = 'rosella.png'; $color = '#be123c'; $bg = 'rgba(190, 18, 60, 0.1)';
+        } elseif (strpos($k, 'jarak') !== false) {
+            $type = 'image'; $media = 'jarakkepyar.png'; $color = '#4d7c0f'; $bg = 'rgba(77, 124, 15, 0.1)'; 
+        } elseif (strpos($k, 'kenaf') !== false) {
+            $type = 'image'; $media = 'kenaf.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
+        } elseif (strpos($k, 'rami') !== false) {
+            $type = 'image'; $media = 'rami.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
+        } elseif (strpos($k, 'tebu') !== false) {
+            $type = 'image'; $media = 'tebu.png'; $color = '#9dcf12'; $bg = 'rgba(21, 128, 61, 0.1)';
+        } elseif (strpos($k, 'abaka') !== false) {
+            $type = 'image'; $media = 'abaka.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
+        }
+
+        return ['type' => $type, 'media' => $media, 'color' => $color, 'bg' => $bg];
+    }
+}
+
 // Cek Autentikasi
 if(!isset($_SESSION['user_id'])) {
     header("Location: ../index.php");
@@ -227,17 +275,17 @@ require_once '../templates/sidebar.php';
                                     </thead>
                                     <tbody>
                                         <?php
-                                        // UPDATE QUERY: Ambil semua kolom (*) agar deskripsi dan harga_satuan ikut terbaca
+                                        // UPDATE QUERY: Ambil semua kolom (*)
                                         $query_terbaru = "SELECT * FROM laporan 
-                                                        WHERE balai_id = $balai_id 
-                                                        ORDER BY id_laporan DESC 
-                                                        LIMIT 5";
+                                                          WHERE balai_id = $balai_id 
+                                                          ORDER BY id_laporan DESC 
+                                                          LIMIT 5";
                                         $result_terbaru = mysqli_query($conn, $query_terbaru);
                                         
                                         if (mysqli_num_rows($result_terbaru) > 0):
                                             while ($row_baru = mysqli_fetch_assoc($result_terbaru)):
                                                 
-                                                // BACA METADATA SATUAN (gr & /gram) DARI DESKRIPSI
+                                                // BACA METADATA SATUAN DARI DESKRIPSI
                                                 $stok_unit = ''; $harga_unit = '';
                                                 if(strpos($row_baru['deskripsi'], 'MetaUnit=[') !== false) {
                                                     preg_match('/MetaUnit=\[([^|]+)\|([^\]]+)\]/', $row_baru['deskripsi'], $m);
@@ -264,43 +312,58 @@ require_once '../templates/sidebar.php';
                                                 } elseif (strpos($st_lower, 'batas') !== false) {
                                                     $outline_class = 'border-warning text-warning-emphasis'; // Oranye
                                                 }
-                                        ?>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3 text-success shadow-sm" style="width: 38px; height: 38px; min-width: 38px;">
-                                                        <i class="fas fa-seedling"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-bold text-success" style="font-size: 0.95rem;"><?= htmlspecialchars($row_baru['komoditas']); ?></div>
-                                                        <div class="text-muted" style="font-size: 0.8rem;">
-                                                            <?= htmlspecialchars($row_baru['varietas'] ?: 'Tanpa Varietas'); ?> 
-                                                            <?= !empty($row_baru['kelompok_komoditas']) ? '• ' . htmlspecialchars($row_baru['kelompok_komoditas']) : ''; ?>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            
-                                            <td>
-                                                <?= htmlspecialchars($row_baru['kelas_benih'] ?: '-'); ?>
-                                            </td>
 
-                                            <td>
-                                                <div class="fw-bold text-dark fs-6">
-                                                    <?= number_format($row_baru['jumlah_benih']) . $stok_unit; ?> 
-                                                    <span class="badge bg-light text-secondary border px-2 ms-1 fw-medium" style="font-size:0.7rem;"><?= htmlspecialchars($row_baru['satuan']); ?></span>
-                                                </div>
-                                                <div class="small text-success fw-medium mt-1">
-                                                    <?= !empty($row_baru['harga_satuan']) ? 'Rp ' . number_format($row_baru['harga_satuan'], 0, ',', '.') . ' <span class="fw-normal text-muted">' . htmlspecialchars($harga_unit) . '</span>' : '-'; ?>
-                                                </div>
-                                            </td>
-                                            
-                                            <td>
-                                                <span class="badge bg-transparent border <?= $outline_class; ?> px-3 py-2 rounded-2 fw-bold" style="letter-spacing: 0.5px;">
-                                                    <?= htmlspecialchars($status); ?>
-                                                </span>
-                                            </td>
-                                        </tr>
+                                                // PANGGIL MEDIA KOMODITAS UNTUK BARIS INI
+                                                $styleTanaman = getKomoditasMedia($row_baru['komoditas']);
+                                        ?>
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            
+                                                            <div class="rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm overflow-hidden border border-2" 
+                                                                 style="width: 42px; height: 42px; min-width: 42px; background-color: <?= $styleTanaman['bg']; ?>; border-color: <?= $styleTanaman['color']; ?> !important; color: <?= $styleTanaman['color']; ?>;">
+                                                                
+                                                                <?php if($styleTanaman['type'] == 'image'): ?>
+                                                                    <img src="../assets/img/komoditas/<?= $styleTanaman['media']; ?>" 
+                                                                         alt="<?= htmlspecialchars($row_baru['komoditas']); ?>" 
+                                                                         style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"
+                                                                         onerror="this.onerror=null; this.outerHTML='<i class=\'fas fa-seedling\'></i>';">
+                                                                <?php else: ?>
+                                                                    <i class="fas <?= $styleTanaman['media']; ?>"></i>
+                                                                <?php endif; ?>
+                                                                
+                                                            </div>
+
+                                                            <div>
+                                                                <div class="fw-bold text-success" style="font-size: 0.95rem;"><?= htmlspecialchars($row_baru['komoditas']); ?></div>
+                                                                <div class="text-muted" style="font-size: 0.8rem;">
+                                                                    <?= htmlspecialchars($row_baru['varietas'] ?: 'Tanpa Varietas'); ?> 
+                                                                    <?= !empty($row_baru['kelompok_komoditas']) ? '• ' . htmlspecialchars($row_baru['kelompok_komoditas']) : ''; ?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    
+                                                    <td>
+                                                        <?= htmlspecialchars($row_baru['kelas_benih'] ?: '-'); ?>
+                                                    </td>
+
+                                                    <td>
+                                                        <div class="fw-bold text-dark fs-6">
+                                                            <?= number_format($row_baru['jumlah_benih']) . $stok_unit; ?> 
+                                                            <span class="badge bg-light text-secondary border px-2 ms-1 fw-medium" style="font-size:0.7rem;"><?= htmlspecialchars($row_baru['satuan']); ?></span>
+                                                        </div>
+                                                        <div class="small text-success fw-medium mt-1">
+                                                            <?= !empty($row_baru['harga_satuan']) ? 'Rp ' . number_format($row_baru['harga_satuan'], 0, ',', '.') . ' <span class="fw-normal text-muted">' . htmlspecialchars($harga_unit) . '</span>' : '-'; ?>
+                                                        </div>
+                                                    </td>
+                                                    
+                                                    <td>
+                                                        <span class="badge bg-transparent border <?= $outline_class; ?> px-3 py-2 rounded-2 fw-bold" style="letter-spacing: 0.5px;">
+                                                            <?= htmlspecialchars($status); ?>
+                                                        </span>
+                                                    </td>
+                                                </tr>
                                         <?php 
                                             endwhile;
                                         else: 

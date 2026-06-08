@@ -213,8 +213,8 @@ require_once '../templates/sidebar.php';
                                 <th>Komoditas (Varietas)</th>
                                 <th>Kelas Benih</th>
                                 <th>Stok & Harga</th>
-                                <th>Distribusi</th>
-                                <th>Lokasi</th>
+                                <th>Terdistribusi</th>
+                                <th>Lokasi Distribusi</th>
                                 <th>Satuan</th>
                                 <th>Status</th>
                                 <th>Periode</th>

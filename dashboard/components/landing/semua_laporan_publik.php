@@ -12,12 +12,19 @@ if (!function_exists('getBalaiColor')) {
     }
 }
 
-// 1. LOGIKA RESET TANGGAL 20
+// 1. LOGIKA RESET TANGGAL 20 (DIPERBARUI)
 $hari_ini = (int)date('d');
+
 if ($hari_ini >= 20) {
-    $tgl_mulai = date('Y-m-20 00:00:00');
+    // Jika hari ini tanggal 20 ke atas (misal: 20 Juni), 
+    // tampilkan data mulai dari 1 Juni. 
+    // (Efek: Data Mei akan hilang, tapi data 1-20 Juni tetap aman)
+    $tgl_mulai = date('Y-m-01 00:00:00');
 } else {
-    $tgl_mulai = date('Y-m-20 00:00:00', strtotime('-1 month'));
+    // Jika hari ini di bawah tanggal 20 (misal: 15 Juni), 
+    // tampilkan data mulai dari 1 Mei.
+    // (Efek: Data Mei dan data 1-15 Juni akan tampil semua)
+    $tgl_mulai = date('Y-m-01 00:00:00', strtotime('first day of last month'));
 }
 
 // Fitur Pencarian & Filter Sederhana
@@ -142,13 +149,15 @@ require_once '../../../templates/header.php';
                         <thead>
                             <tr>
                                 <th class="text-center" width="5%">No</th>
-                                <th width="12%">Balai</th>
-                                <th width="20%">Komoditas (Varietas)</th>
-                                <th width="12%">Kelas</th>
-                                <th width="20%">Stok & Harga</th>
-                                <th width="12%">Status</th>
-                                <th width="14%">Periode</th>
-                                <th class="text-center" width="10%">Aksi</th>
+                                <th width="10%">Balai</th>
+                                <th width="18%">Komoditas (Varietas)</th>
+                                <th width="10%">Kelas</th>
+                                <th width="13%">Stok & Harga</th>
+                                <th width="10%">Terdistribusi</th>
+                                <th width="12%">Lokasi</th>
+                                <th width="10%">Status</th>
+                                <th width="8%">Periode</th>
+                                <th class="text-center" width="4%">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -222,6 +231,14 @@ require_once '../../../templates/header.php';
                                     </td>
                                     
                                     <td>
+                                        <div class="fw-bold" style="color: #d97706;">
+                                            <?= number_format((int)($row['volume_penyaluran'] ?? 0)) . $stok_unit; ?>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="small text-muted fw-medium"><?= htmlspecialchars($row['lokasi_distribusi'] ?: '-'); ?></div>
+                                    </td>
+                                    <td>
                                         <span class="badge bg-transparent border <?= $badge_class; ?> px-2 py-1 rounded-2 fw-bold" style="font-size: 0.75rem;">
                                             <?= htmlspecialchars($status); ?>
                                         </span>
@@ -233,15 +250,16 @@ require_once '../../../templates/header.php';
                                     </td>
                                     
                                     <td class="text-center">
-                                        <a href="detail_publik.php?id=<?= $row['id_laporan']; ?>" class="btn btn-outline-info btn-sm rounded-3 px-3 shadow-sm">
-                                            <i class="fas fa-eye me-1"></i> Detail
+                                        <a href="detail_publik.php?id=<?= $row['id_laporan']; ?>" class="btn btn-outline-info btn-sm rounded-3 px-3 shadow-sm" title="Lihat Detail">
+                                            <i class="fas fa-eye"></i>
                                         </a>
                                     </td>
                                 </tr>
                             <?php 
                                 } 
                             } else {
-                                echo "<tr><td colspan='8' class='text-center py-5 text-muted'><i class='fas fa-search fa-3x mb-3 opacity-25'></i><p class='mb-0 fw-bold'>Data tidak ditemukan.</p></td></tr>";
+                                // COLSPAN diubah dari 8 menjadi 10 karena ketambahan 2 kolom baru
+                                echo "<tr><td colspan='10' class='text-center py-5 text-muted'><i class='fas fa-search fa-3x mb-3 opacity-25'></i><p class='mb-0 fw-bold'>Data tidak ditemukan.</p></td></tr>";
                             }
                             ?>
                         </tbody>

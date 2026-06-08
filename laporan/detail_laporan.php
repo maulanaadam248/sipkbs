@@ -256,8 +256,8 @@ require_once '../templates/sidebar.php';
                     </div>
 
                     <div class="col-12 mt-4">
-                        <div class="info-box border-start border-warning border-4" style="background-color: #fffbeb;">
-                            <div class="detail-label text-warning" style="color: #d97706 !important;">
+                        <div class="info-box bg-white border-start border-warning border-4 shadow-sm">
+                            <div class="detail-label text-warning mb-3" style="color: #d97706 !important;">
                                 <i class="fas fa-clipboard-list me-2"></i>Rincian Distribusi
                             </div>
                             
@@ -301,7 +301,7 @@ require_once '../templates/sidebar.php';
                                     </div>
                                 <?php else: ?>
                                     <div class="text-dark fw-bold fs-5">
-                                        </i><?= number_format((int)($laporan['volume_penyaluran'] ?? 0)) . $stok_unit; ?> <span class="fs-6 fw-normal text-muted"><?= htmlspecialchars($laporan['satuan']); ?></span>
+                                        <i></i><?= number_format((int)($laporan['volume_penyaluran'] ?? 0)) . $stok_unit; ?> <span class="fs-6 fw-normal text-muted"><?= htmlspecialchars($laporan['satuan']); ?></span>
                                     </div>
                                     <div class="text-secondary mt-1">Pembeli: <?= htmlspecialchars($laporan['penerima_manfaat'] ?: 'Belum ada rincian distribusi.'); ?></div>
                                     <div class="text-secondary">Lokasi: <?= htmlspecialchars($laporan['lokasi_distribusi'] ?: '-'); ?></div>

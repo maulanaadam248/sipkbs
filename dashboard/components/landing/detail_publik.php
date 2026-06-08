@@ -16,35 +16,35 @@ if (!function_exists('getKomoditasMedia')) {
 
         // Jika dikenali, ganti TIPE menjadi GAMBAR
         if (strpos($k, 'kakao') !== false) {
-            $type = 'image'; $media = 'kakao-removebg-preview.png'; $color = '#78350f'; $bg = 'rgba(120, 53, 15, 0.1)';
+            $type = 'image'; $media = 'kakao.png'; $color = '#78350f'; $bg = 'rgba(120, 53, 15, 0.1)';
         } elseif (strpos($k, 'kopi') !== false) {
-            $type = 'image'; $media = 'kopi-removebg-preview.png'; $color = '#451a03'; $bg = 'rgba(69, 26, 3, 0.1)'; 
+            $type = 'image'; $media = 'kopi.png'; $color = '#451a03'; $bg = 'rgba(69, 26, 3, 0.1)'; 
         } elseif (strpos($k, 'kelapa') !== false) {
-            $type = 'image'; $media = 'kelapa-removebg-preview.png'; $color = '#047857'; $bg = 'rgba(4, 120, 87, 0.1)'; 
+            $type = 'image'; $media = 'kelapa.png'; $color = '#047857'; $bg = 'rgba(4, 120, 87, 0.1)'; 
         } elseif (strpos($k, 'tembakau') !== false) {
-            $type = 'image'; $media = 'tembakau-removebg-preview.png'; $color = '#c3aa1a'; $bg = 'rgba(101, 163, 13, 0.1)'; 
+            $type = 'image'; $media = 'tembakau.png'; $color = '#c3aa1a'; $bg = 'rgba(101, 163, 13, 0.1)'; 
         } elseif (strpos($k, 'kapas') !== false) {
-            $type = 'image'; $media = 'kapas-removebg-preview.png'; $color = '#0ea5e9'; $bg = 'rgba(14, 165, 233, 0.1)'; 
+            $type = 'image'; $media = 'kapas.png'; $color = '#0ea5e9'; $bg = 'rgba(14, 165, 233, 0.1)'; 
         } elseif (strpos($k, 'lada') !== false) {
-            $type = 'image'; $media = 'lada-removebg-preview.png'; $color = '#064e3b'; $bg = 'rgba(6, 78, 59, 0.1)'; 
+            $type = 'image'; $media = 'lada.png'; $color = '#064e3b'; $bg = 'rgba(6, 78, 59, 0.1)'; 
         } elseif (strpos($k, 'vanili') !== false) {
-            $type = 'image'; $media = 'vanili-removebg-preview.png'; $color = '#0d9488'; $bg = 'rgba(13, 148, 136, 0.1)'; 
+            $type = 'image'; $media = 'vanili.png'; $color = '#0d9488'; $bg = 'rgba(13, 148, 136, 0.1)'; 
         } elseif (strpos($k, 'nilam') !== false) {
-            $type = 'image'; $media = 'nilam-removebg-preview.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
+            $type = 'image'; $media = 'nilam.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
         } elseif (strpos($k, 'wijen') !== false) {
-            $type = 'image'; $media = 'wijen-removebg-preview.png'; $color = '#06d95e'; $bg = 'rgba(217, 119, 6, 0.1)'; 
+            $type = 'image'; $media = 'wijen.png'; $color = '#06d95e'; $bg = 'rgba(217, 119, 6, 0.1)'; 
         } elseif (strpos($k, 'rosella') !== false) {
-            $type = 'image'; $media = 'rosela-removebg-preview.png'; $color = '#be123c'; $bg = 'rgba(190, 18, 60, 0.1)';
+            $type = 'image'; $media = 'rosela.png'; $color = '#be123c'; $bg = 'rgba(190, 18, 60, 0.1)';
         } elseif (strpos($k, 'jarak') !== false) {
-            $type = 'image'; $media = 'jarakkepyar-removebg-preview.png'; $color = '#4d7c0f'; $bg = 'rgba(77, 124, 15, 0.1)'; 
+            $type = 'image'; $media = 'jarakkepyar.png'; $color = '#4d7c0f'; $bg = 'rgba(77, 124, 15, 0.1)'; 
         } elseif (strpos($k, 'kenaf') !== false) {
-            $type = 'image'; $media = 'kenaf-removebg-preview.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
+            $type = 'image'; $media = 'kenaf.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
         } elseif (strpos($k, 'rami') !== false) {
-            $type = 'image'; $media = 'rami-removebg-preview.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
+            $type = 'image'; $media = 'rami.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
         } elseif (strpos($k, 'tebu') !== false) {
-            $type = 'image'; $media = 'tebu (2).png'; $color = '#9dcf12'; $bg = 'rgba(21, 128, 61, 0.1)';
+            $type = 'image'; $media = 'tebu.png'; $color = '#9dcf12'; $bg = 'rgba(21, 128, 61, 0.1)';
         } elseif (strpos($k, 'abaka') !== false) {
-            $type = 'image'; $media = 'abaka-removebg-preview.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
+            $type = 'image'; $media = 'abaka.png'; $color = '#15803d'; $bg = 'rgba(21, 128, 61, 0.1)';
         }
 
         return ['type' => $type, 'media' => $media, 'color' => $color, 'bg' => $bg];
@@ -168,12 +168,12 @@ require_once '../../../templates/header.php';
         letter-spacing: 0.5px;
     }
     
-    /* GAYA UNTUK GAMBAR AVATAR */
+    /* GAYA UNTUK GAMBAR AVATAR - SUDAH DIPERBAIKI FULL LINGKARAN */
     .komoditas-avatar {
-        width: 80px; 
-        height: 80px;
-        padding: 10px; 
-        object-fit: contain; 
+        width: 100%; 
+        height: 100%;
+        object-fit: cover; 
+        border-radius: 50%;
     }
 </style>
 
@@ -204,11 +204,9 @@ require_once '../../../templates/header.php';
                 <div class="row align-items-center mb-5">
                     
                     <div class="col-md-auto mb-3 mb-md-0">
-                        <!-- LINGKARAN AVATAR HYBRID -->
                         <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm overflow-hidden border border-2" 
                              style="width: 85px; height: 85px; background-color: <?php echo $styleTanaman['bg']; ?>; border-color: <?php echo $styleTanaman['color']; ?> !important; color: <?php echo $styleTanaman['color']; ?>;">
                             
-                            <!-- LOGIKA HYBRID Bekerja di sini -->
                             <?php if($styleTanaman['type'] == 'image'): ?>
                                 <img src="../../../assets/img/komoditas/<?php echo $styleTanaman['media']; ?>" 
                                      alt="<?php echo htmlspecialchars($laporan['komoditas']); ?>" 
@@ -275,7 +273,7 @@ require_once '../../../templates/header.php';
 
                     <div class="col-md-6 col-lg-4">
                         <div class="info-box h-100 border-start border-primary border-4">
-                            <div class="detail-label text-primary"><i class="fas fa-boxes me-2"></i>Jumlah Stok</div>
+                            <div class="detail-label text-primary"><i class="fas fa-boxes me-2"></i>Jumlah Stok Tersedia</div>
                             <div class="detail-value fs-3"><?php echo number_format($laporan['jumlah_benih']) . $stok_unit; ?> <span class="fs-6 fw-normal text-muted"><?php echo htmlspecialchars($laporan['satuan']); ?></span></div>
                         </div>
                     </div>
@@ -296,6 +294,60 @@ require_once '../../../templates/header.php';
                         </div>
                     </div>
 
+                    <div class="col-12 mt-4">
+                        <div class="info-box bg-white border-start border-warning border-4 shadow-sm">
+                            <div class="detail-label text-warning mb-3" style="color: #d97706 !important;">
+                                <i class="fas fa-clipboard-list me-2"></i>Rincian Distribusi
+                            </div>
+                            
+                            <div class="mt-3">
+                                <?php 
+                                $raw_json = $laporan['penerima_manfaat'] ?? '';
+                                $distribusi = !empty($raw_json) ? json_decode($raw_json, true) : null;
+                                
+                                if (!empty($distribusi) && is_array($distribusi)): 
+                                ?>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-borderless mb-0">
+                                            <thead>
+                                                <tr class="text-muted border-bottom" style="font-size: 0.8rem;">
+                                                    <th class="pb-2">VOL. TERDISTRIBUSI</th>
+                                                    <th class="pb-2">ENTITAS PEMBELI</th>
+                                                    <th class="pb-2">LOKASI</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($distribusi as $item): ?>
+                                                <tr>
+                                                    <td width="200px" class="fw-bold text-dark py-2">
+                                                        <i class="fas fa-caret-right me-2 text-warning"></i>
+                                                        <?= number_format((int)$item['qty']) . $stok_unit; ?> <span class="small fw-normal text-muted"><?= htmlspecialchars($laporan['satuan']); ?></span>
+                                                    </td>
+                                                    <td class="text-secondary py-2"><?= htmlspecialchars($item['target']); ?></td>
+                                                    <td class="text-secondary py-2"><?= htmlspecialchars($item['lokasi'] ?? '-'); ?></td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr class="border-top">
+                                                    <td class="fw-bolder text-dark pt-3">TOTAL TERDISTRIBUSI</td>
+                                                    <td colspan="2" class="fw-bolder text-warning pt-3" style="color: #d97706 !important;">
+                                                        : <?= number_format((int)($laporan['volume_penyaluran'] ?? 0)) . $stok_unit; ?> <?= htmlspecialchars($laporan['satuan']); ?>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="text-dark fw-bold fs-5">
+                                        <i></i><?= number_format((int)($laporan['volume_penyaluran'] ?? 0)) . $stok_unit; ?> <span class="fs-6 fw-normal text-muted"><?= htmlspecialchars($laporan['satuan']); ?></span>
+                                    </div>
+                                    <div class="text-secondary mt-1">Pembeli: <?= htmlspecialchars($laporan['penerima_manfaat'] ?: 'Belum ada rincian distribusi.'); ?></div>
+                                    <div class="text-secondary">Lokasi: <?= htmlspecialchars($laporan['lokasi_distribusi'] ?: '-'); ?></div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-12 mt-4">
                         <div class="info-box" style="background-color: #fff; border-style: dashed; border-width: 2px;">
                             <div class="detail-label mb-3"><i class="fas fa-align-left me-2"></i>Deskripsi Tambahan</div>
